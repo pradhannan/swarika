@@ -104,3 +104,12 @@ class CancelSleepTimerEvent extends PlayerEvent {}
 class SleepAfterCurrentSongEvent extends PlayerEvent {}
 
 class SleepTimerExpiredEvent extends PlayerEvent {}
+
+class RestorePlaybackSessionEvent extends PlayerEvent {
+  final List<SongModel> librarySongs;
+
+  const RestorePlaybackSessionEvent(this.librarySongs);
+
+  @override
+  List<Object> get props => [librarySongs];
+}

@@ -2,13 +2,13 @@
  // ignore_for_file: unused_import
 
 import 'dart:async';
-
 import 'package:flutter/material.dart' hide RepeatMode;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart' hide PlayerEvent, PlayerState;
 import 'package:media_player_app/Features/audio_player/Logic/Player/player_event.dart';
 import 'package:media_player_app/Features/audio_player/Logic/Player/player_state.dart';
-import 'package:media_player_app/Features/audio_player/data/audio_player_repository.dart';
+import 'package:media_player_app/Features/audio_player/data/Repository/audio_player_repository.dart';
+import 'package:media_player_app/Features/audio_player/data/Repository/playback_sessions_repository.dart';
 import 'package:media_player_app/Features/audio_player/domain/song_model.dart';
 
 class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
@@ -40,7 +40,17 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   Timer? _sleepCountdownTimer;
   DateTime? _sleepTimerEndTime;
 
-  PlayerBloc({required this.audioPlayerRepository})
+  //playback session
+  final PlaybackSessionRepository playbackSessionRepository;
+
+  Timer? _sessionSaveTimer;
+  bool _isSavingSession = false;
+  bool _hasAttemptedSessionRestore = false;
+
+  PlayerBloc({
+    required this.audioPlayerRepository,
+    required this.playbackSessionRepository,
+  })
       : super(PlayerInitialState()) {
     //PLAY
     on<PlaySongEvent>(_onPlaySong);
@@ -67,7 +77,14 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<SleepTimerExpiredEvent>(_onSleepTimerExpired);
     on<SleepAfterCurrentSongEvent>(_onSleepAfterCurrentSong);
 
+
+    //playback
+    on<RestorePlaybackSessionEvent>(_onRestorePlaybackSession);
+
+
     _listenToPlayerStreams();
+
+    _startSessionSaveTimer();
   }
 
   void _listenToPlayerStreams() {
@@ -167,6 +184,7 @@ _duration = Duration(milliseconds: event.song.duration);
     } finally {
       _isSyncingPlaylist = false;
     }
+    await _savePlaybackSession();
   }
 
   Future<void> _onNextSong(
@@ -267,6 +285,7 @@ _duration = Duration(milliseconds: event.song.duration);
     } finally {
       _isSyncingPlaylist = false;
     }
+    await _savePlaybackSession();
 
     _emitCurrentStatus(); // publishes the updated queue through PlayerStatusState.
   }
@@ -321,6 +340,7 @@ _duration = Duration(milliseconds: event.song.duration);
     // allow stream updates again after reordering finishes.
     _isSyncingPlaylist = false;
   }
+  await _savePlaybackSession();
     _emitCurrentStatus();
   }
 
@@ -342,6 +362,7 @@ _duration = Duration(milliseconds: event.song.duration);
       RepeatMode.one => LoopMode.one,
     },
   );
+  await _savePlaybackSession();
 
 
     _emitCurrentStatus();
@@ -406,6 +427,8 @@ _duration = Duration(milliseconds: event.song.duration);
       _originalPlaylist.add(event.song);
     }
 
+    await _savePlaybackSession();
+
     _emitCurrentStatus();
   }
 
@@ -450,6 +473,7 @@ _duration = Duration(milliseconds: event.song.duration);
 
     // Add only the new audio source instead of rebuilding the entire playlist.
     await audioPlayerRepository.addSong(event.song);
+    await _savePlaybackSession();
 
     _emitCurrentStatus();
   }
@@ -520,6 +544,8 @@ _duration = Duration(milliseconds: event.song.duration);
     // Remove only the selected audio source without interrupting playback.
     await audioPlayerRepository.removeSongAt(index);
 
+    await _savePlaybackSession();
+
     _emitCurrentStatus();
   }
 
@@ -583,14 +609,155 @@ _duration = Duration(milliseconds: event.song.duration);
     _sleepAfterCurrentSong = true;
   }
 
+
+  //Playback sessions:
+  Future<void> _savePlaybackSession() async {
+  if (_currentSong == null ||
+      _playlist.isEmpty ||
+      _currentIndex < 0 ||
+      _isSavingSession) {
+    return;
+  }
+
+  _isSavingSession = true;
+
+  try {
+    await playbackSessionRepository.saveSession(
+      songId: _currentSong!.id,
+      position: _position,
+      queueSongIds: _playlist.map((song) => song.id).toList(),
+      originalQueueSongIds:
+          _originalPlaylist.map((song) => song.id).toList(),
+      currentIndex: _currentIndex,
+      isShuffle: _isShuffle,
+      repeatMode: _repeatMode.name,
+    );
+  } catch (e) {
+    // Persistence failure must not interrupt playback
+  } finally {
+    _isSavingSession = false;
+  }
+}
+
+void _startSessionSaveTimer() {
+  _sessionSaveTimer?.cancel();
+
+  _sessionSaveTimer = Timer.periodic(
+    const Duration(seconds: 5),
+    (_) {
+      _savePlaybackSession();
+    },
+  );
+}
+
+
+Future<void> _onRestorePlaybackSession(
+  RestorePlaybackSessionEvent event,
+  Emitter<PlayerState> emit,
+) async {
+  try {
+
+      if (_hasAttemptedSessionRestore) return;
+      _hasAttemptedSessionRestore = true;
+    final savedSession =
+        await playbackSessionRepository.getSavedSession();
+
+    if (savedSession == null || event.librarySongs.isEmpty) {
+      return;
+    }
+
+    // Match saved song IDs with songs currently available on the device
+    final libraryMap = {
+      for (final song in event.librarySongs) song.id: song,
+    };
+
+    final restoredQueue = savedSession.queueSongIds
+        .map((id) => libraryMap[id])
+        .whereType<SongModel>()
+        .toList();
+
+    final restoredOriginalQueue = savedSession.originalQueueSongIds
+        .map((id) => libraryMap[id])
+        .whereType<SongModel>()
+        .toList();
+
+    if (restoredQueue.isEmpty) return;
+
+    // Restore the original queue, falling back if its saved IDs are unavailable
+    _originalPlaylist = restoredOriginalQueue.isNotEmpty
+        ? restoredOriginalQueue
+        : List<SongModel>.from(restoredQueue);
+
+    _playlist = restoredQueue;
+
+    // Find the saved current song in the restored queue
+    _currentIndex = _playlist.indexWhere(
+      (song) => song.id == savedSession.songId,
+    );
+
+    if (_currentIndex == -1) {
+      _currentIndex = savedSession.currentIndex
+          .clamp(0, _playlist.length - 1);
+    }
+
+    _currentSong = _playlist[_currentIndex];
+
+    _isShuffle = savedSession.isShuffle;
+
+    _repeatMode = RepeatMode.values.firstWhere(
+      (mode) => mode.name == savedSession.repeatMode,
+      orElse: () => RepeatMode.off,
+    );
+
+    _isPlaying = false;
+    _completionQueued = false;
+
+    _duration = Duration(milliseconds: _currentSong!.duration);
+
+    _position = savedSession.position;
+    if (_duration > Duration.zero && _position > _duration) {
+      _position = _duration;
+    }
+
+    // Prevent the repository's index stream from dispatching
+    // CurrentIndexChangedEvent during restoration
+    _isSyncingPlaylist = true;
+
+    try {
+      await audioPlayerRepository.loadPlaylistPaused(
+        songs: _playlist,
+        initialIndex: _currentIndex,
+        initialPosition: _position,
+      );
+
+      final loopMode = switch (_repeatMode) {
+        RepeatMode.off => LoopMode.off,
+        RepeatMode.all => LoopMode.all,
+        RepeatMode.one => LoopMode.one,
+      };
+
+      await audioPlayerRepository.setRepeatMode(loopMode);
+    } finally {
+      _isSyncingPlaylist = false;
+    }
+
+    _emitCurrentStatus();
+  } catch (e) {
+    // Restoration failure should not crash the player
+  }
+}
+
+
   @override
-  Future<void> close() {
+  Future<void> close()async {
     _playerStateSubscription?.cancel();
     _positionSubscription?.cancel();
     _durationSubscription?.cancel();
     _sleepTimer?.cancel();
     _sleepCountdownTimer?.cancel();
     _currentIndexSubscription?.cancel();
+    _sessionSaveTimer?.cancel();
+    await _savePlaybackSession();
 
     return super.close();
   }

@@ -6,7 +6,7 @@ class ThemeState extends Equatable {
   final ThemeMode themeMode;
   final String selectedPalette;
   const ThemeState({
-    this.themeMode = ThemeMode.light,
+    this.themeMode = ThemeMode.dark,
     this.selectedPalette = 'Graphite & Silver', 
   });
 

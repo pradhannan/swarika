@@ -1,6 +1,6 @@
 
 import 'package:drift/drift.dart';
-import 'db/app_database.dart';
+import '../db/app_database.dart';
 
 
 class PlaylistRepository {

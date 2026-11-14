@@ -629,12 +629,738 @@ class PlaylistSongsCompanion extends UpdateCompanion<PlaylistSong> {
   }
 }
 
+class $PlaybackSessionsTable extends PlaybackSessions
+    with TableInfo<$PlaybackSessionsTable, PlaybackSession> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PlaybackSessionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _songIdMeta = const VerificationMeta('songId');
+  @override
+  late final GeneratedColumn<String> songId = GeneratedColumn<String>(
+    'song_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _positionMeta = const VerificationMeta(
+    'position',
+  );
+  @override
+  late final GeneratedColumn<int> position = GeneratedColumn<int>(
+    'position',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _queueSongIdsMeta = const VerificationMeta(
+    'queueSongIds',
+  );
+  @override
+  late final GeneratedColumn<String> queueSongIds = GeneratedColumn<String>(
+    'queue_song_ids',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _currentIndexMeta = const VerificationMeta(
+    'currentIndex',
+  );
+  @override
+  late final GeneratedColumn<int> currentIndex = GeneratedColumn<int>(
+    'current_index',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isShuffleMeta = const VerificationMeta(
+    'isShuffle',
+  );
+  @override
+  late final GeneratedColumn<bool> isShuffle = GeneratedColumn<bool>(
+    'is_shuffle',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_shuffle" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _repeatModeMeta = const VerificationMeta(
+    'repeatMode',
+  );
+  @override
+  late final GeneratedColumn<String> repeatMode = GeneratedColumn<String>(
+    'repeat_mode',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('off'),
+  );
+  static const VerificationMeta _originalQueueSongIdsMeta =
+      const VerificationMeta('originalQueueSongIds');
+  @override
+  late final GeneratedColumn<String> originalQueueSongIds =
+      GeneratedColumn<String>(
+        'original_queue_song_ids',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: const Constant('[]'),
+      );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    songId,
+    position,
+    queueSongIds,
+    currentIndex,
+    isShuffle,
+    repeatMode,
+    originalQueueSongIds,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'playback_sessions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PlaybackSession> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('song_id')) {
+      context.handle(
+        _songIdMeta,
+        songId.isAcceptableOrUnknown(data['song_id']!, _songIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_songIdMeta);
+    }
+    if (data.containsKey('position')) {
+      context.handle(
+        _positionMeta,
+        position.isAcceptableOrUnknown(data['position']!, _positionMeta),
+      );
+    }
+    if (data.containsKey('queue_song_ids')) {
+      context.handle(
+        _queueSongIdsMeta,
+        queueSongIds.isAcceptableOrUnknown(
+          data['queue_song_ids']!,
+          _queueSongIdsMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_queueSongIdsMeta);
+    }
+    if (data.containsKey('current_index')) {
+      context.handle(
+        _currentIndexMeta,
+        currentIndex.isAcceptableOrUnknown(
+          data['current_index']!,
+          _currentIndexMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_currentIndexMeta);
+    }
+    if (data.containsKey('is_shuffle')) {
+      context.handle(
+        _isShuffleMeta,
+        isShuffle.isAcceptableOrUnknown(data['is_shuffle']!, _isShuffleMeta),
+      );
+    }
+    if (data.containsKey('repeat_mode')) {
+      context.handle(
+        _repeatModeMeta,
+        repeatMode.isAcceptableOrUnknown(data['repeat_mode']!, _repeatModeMeta),
+      );
+    }
+    if (data.containsKey('original_queue_song_ids')) {
+      context.handle(
+        _originalQueueSongIdsMeta,
+        originalQueueSongIds.isAcceptableOrUnknown(
+          data['original_queue_song_ids']!,
+          _originalQueueSongIdsMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PlaybackSession map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PlaybackSession(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      songId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}song_id'],
+      )!,
+      position: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}position'],
+      )!,
+      queueSongIds: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}queue_song_ids'],
+      )!,
+      currentIndex: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}current_index'],
+      )!,
+      isShuffle: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_shuffle'],
+      )!,
+      repeatMode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}repeat_mode'],
+      )!,
+      originalQueueSongIds: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}original_queue_song_ids'],
+      )!,
+    );
+  }
+
+  @override
+  $PlaybackSessionsTable createAlias(String alias) {
+    return $PlaybackSessionsTable(attachedDatabase, alias);
+  }
+}
+
+class PlaybackSession extends DataClass implements Insertable<PlaybackSession> {
+  final int id;
+  final String songId;
+  final int position;
+  final String queueSongIds;
+  final int currentIndex;
+  final bool isShuffle;
+  final String repeatMode;
+  final String originalQueueSongIds;
+  const PlaybackSession({
+    required this.id,
+    required this.songId,
+    required this.position,
+    required this.queueSongIds,
+    required this.currentIndex,
+    required this.isShuffle,
+    required this.repeatMode,
+    required this.originalQueueSongIds,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['song_id'] = Variable<String>(songId);
+    map['position'] = Variable<int>(position);
+    map['queue_song_ids'] = Variable<String>(queueSongIds);
+    map['current_index'] = Variable<int>(currentIndex);
+    map['is_shuffle'] = Variable<bool>(isShuffle);
+    map['repeat_mode'] = Variable<String>(repeatMode);
+    map['original_queue_song_ids'] = Variable<String>(originalQueueSongIds);
+    return map;
+  }
+
+  PlaybackSessionsCompanion toCompanion(bool nullToAbsent) {
+    return PlaybackSessionsCompanion(
+      id: Value(id),
+      songId: Value(songId),
+      position: Value(position),
+      queueSongIds: Value(queueSongIds),
+      currentIndex: Value(currentIndex),
+      isShuffle: Value(isShuffle),
+      repeatMode: Value(repeatMode),
+      originalQueueSongIds: Value(originalQueueSongIds),
+    );
+  }
+
+  factory PlaybackSession.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PlaybackSession(
+      id: serializer.fromJson<int>(json['id']),
+      songId: serializer.fromJson<String>(json['songId']),
+      position: serializer.fromJson<int>(json['position']),
+      queueSongIds: serializer.fromJson<String>(json['queueSongIds']),
+      currentIndex: serializer.fromJson<int>(json['currentIndex']),
+      isShuffle: serializer.fromJson<bool>(json['isShuffle']),
+      repeatMode: serializer.fromJson<String>(json['repeatMode']),
+      originalQueueSongIds: serializer.fromJson<String>(
+        json['originalQueueSongIds'],
+      ),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'songId': serializer.toJson<String>(songId),
+      'position': serializer.toJson<int>(position),
+      'queueSongIds': serializer.toJson<String>(queueSongIds),
+      'currentIndex': serializer.toJson<int>(currentIndex),
+      'isShuffle': serializer.toJson<bool>(isShuffle),
+      'repeatMode': serializer.toJson<String>(repeatMode),
+      'originalQueueSongIds': serializer.toJson<String>(originalQueueSongIds),
+    };
+  }
+
+  PlaybackSession copyWith({
+    int? id,
+    String? songId,
+    int? position,
+    String? queueSongIds,
+    int? currentIndex,
+    bool? isShuffle,
+    String? repeatMode,
+    String? originalQueueSongIds,
+  }) => PlaybackSession(
+    id: id ?? this.id,
+    songId: songId ?? this.songId,
+    position: position ?? this.position,
+    queueSongIds: queueSongIds ?? this.queueSongIds,
+    currentIndex: currentIndex ?? this.currentIndex,
+    isShuffle: isShuffle ?? this.isShuffle,
+    repeatMode: repeatMode ?? this.repeatMode,
+    originalQueueSongIds: originalQueueSongIds ?? this.originalQueueSongIds,
+  );
+  PlaybackSession copyWithCompanion(PlaybackSessionsCompanion data) {
+    return PlaybackSession(
+      id: data.id.present ? data.id.value : this.id,
+      songId: data.songId.present ? data.songId.value : this.songId,
+      position: data.position.present ? data.position.value : this.position,
+      queueSongIds: data.queueSongIds.present
+          ? data.queueSongIds.value
+          : this.queueSongIds,
+      currentIndex: data.currentIndex.present
+          ? data.currentIndex.value
+          : this.currentIndex,
+      isShuffle: data.isShuffle.present ? data.isShuffle.value : this.isShuffle,
+      repeatMode: data.repeatMode.present
+          ? data.repeatMode.value
+          : this.repeatMode,
+      originalQueueSongIds: data.originalQueueSongIds.present
+          ? data.originalQueueSongIds.value
+          : this.originalQueueSongIds,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlaybackSession(')
+          ..write('id: $id, ')
+          ..write('songId: $songId, ')
+          ..write('position: $position, ')
+          ..write('queueSongIds: $queueSongIds, ')
+          ..write('currentIndex: $currentIndex, ')
+          ..write('isShuffle: $isShuffle, ')
+          ..write('repeatMode: $repeatMode, ')
+          ..write('originalQueueSongIds: $originalQueueSongIds')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    songId,
+    position,
+    queueSongIds,
+    currentIndex,
+    isShuffle,
+    repeatMode,
+    originalQueueSongIds,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PlaybackSession &&
+          other.id == this.id &&
+          other.songId == this.songId &&
+          other.position == this.position &&
+          other.queueSongIds == this.queueSongIds &&
+          other.currentIndex == this.currentIndex &&
+          other.isShuffle == this.isShuffle &&
+          other.repeatMode == this.repeatMode &&
+          other.originalQueueSongIds == this.originalQueueSongIds);
+}
+
+class PlaybackSessionsCompanion extends UpdateCompanion<PlaybackSession> {
+  final Value<int> id;
+  final Value<String> songId;
+  final Value<int> position;
+  final Value<String> queueSongIds;
+  final Value<int> currentIndex;
+  final Value<bool> isShuffle;
+  final Value<String> repeatMode;
+  final Value<String> originalQueueSongIds;
+  const PlaybackSessionsCompanion({
+    this.id = const Value.absent(),
+    this.songId = const Value.absent(),
+    this.position = const Value.absent(),
+    this.queueSongIds = const Value.absent(),
+    this.currentIndex = const Value.absent(),
+    this.isShuffle = const Value.absent(),
+    this.repeatMode = const Value.absent(),
+    this.originalQueueSongIds = const Value.absent(),
+  });
+  PlaybackSessionsCompanion.insert({
+    this.id = const Value.absent(),
+    required String songId,
+    this.position = const Value.absent(),
+    required String queueSongIds,
+    required int currentIndex,
+    this.isShuffle = const Value.absent(),
+    this.repeatMode = const Value.absent(),
+    this.originalQueueSongIds = const Value.absent(),
+  }) : songId = Value(songId),
+       queueSongIds = Value(queueSongIds),
+       currentIndex = Value(currentIndex);
+  static Insertable<PlaybackSession> custom({
+    Expression<int>? id,
+    Expression<String>? songId,
+    Expression<int>? position,
+    Expression<String>? queueSongIds,
+    Expression<int>? currentIndex,
+    Expression<bool>? isShuffle,
+    Expression<String>? repeatMode,
+    Expression<String>? originalQueueSongIds,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (songId != null) 'song_id': songId,
+      if (position != null) 'position': position,
+      if (queueSongIds != null) 'queue_song_ids': queueSongIds,
+      if (currentIndex != null) 'current_index': currentIndex,
+      if (isShuffle != null) 'is_shuffle': isShuffle,
+      if (repeatMode != null) 'repeat_mode': repeatMode,
+      if (originalQueueSongIds != null)
+        'original_queue_song_ids': originalQueueSongIds,
+    });
+  }
+
+  PlaybackSessionsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? songId,
+    Value<int>? position,
+    Value<String>? queueSongIds,
+    Value<int>? currentIndex,
+    Value<bool>? isShuffle,
+    Value<String>? repeatMode,
+    Value<String>? originalQueueSongIds,
+  }) {
+    return PlaybackSessionsCompanion(
+      id: id ?? this.id,
+      songId: songId ?? this.songId,
+      position: position ?? this.position,
+      queueSongIds: queueSongIds ?? this.queueSongIds,
+      currentIndex: currentIndex ?? this.currentIndex,
+      isShuffle: isShuffle ?? this.isShuffle,
+      repeatMode: repeatMode ?? this.repeatMode,
+      originalQueueSongIds: originalQueueSongIds ?? this.originalQueueSongIds,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (songId.present) {
+      map['song_id'] = Variable<String>(songId.value);
+    }
+    if (position.present) {
+      map['position'] = Variable<int>(position.value);
+    }
+    if (queueSongIds.present) {
+      map['queue_song_ids'] = Variable<String>(queueSongIds.value);
+    }
+    if (currentIndex.present) {
+      map['current_index'] = Variable<int>(currentIndex.value);
+    }
+    if (isShuffle.present) {
+      map['is_shuffle'] = Variable<bool>(isShuffle.value);
+    }
+    if (repeatMode.present) {
+      map['repeat_mode'] = Variable<String>(repeatMode.value);
+    }
+    if (originalQueueSongIds.present) {
+      map['original_queue_song_ids'] = Variable<String>(
+        originalQueueSongIds.value,
+      );
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlaybackSessionsCompanion(')
+          ..write('id: $id, ')
+          ..write('songId: $songId, ')
+          ..write('position: $position, ')
+          ..write('queueSongIds: $queueSongIds, ')
+          ..write('currentIndex: $currentIndex, ')
+          ..write('isShuffle: $isShuffle, ')
+          ..write('repeatMode: $repeatMode, ')
+          ..write('originalQueueSongIds: $originalQueueSongIds')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $AppSettingsTable extends AppSettings
+    with TableInfo<$AppSettingsTable, AppSetting> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AppSettingsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _keyMeta = const VerificationMeta('key');
+  @override
+  late final GeneratedColumn<String> key = GeneratedColumn<String>(
+    'key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _valueMeta = const VerificationMeta('value');
+  @override
+  late final GeneratedColumn<String> value = GeneratedColumn<String>(
+    'value',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [key, value];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'app_settings';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<AppSetting> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('key')) {
+      context.handle(
+        _keyMeta,
+        key.isAcceptableOrUnknown(data['key']!, _keyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_keyMeta);
+    }
+    if (data.containsKey('value')) {
+      context.handle(
+        _valueMeta,
+        value.isAcceptableOrUnknown(data['value']!, _valueMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_valueMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {key};
+  @override
+  AppSetting map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AppSetting(
+      key: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}key'],
+      )!,
+      value: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}value'],
+      )!,
+    );
+  }
+
+  @override
+  $AppSettingsTable createAlias(String alias) {
+    return $AppSettingsTable(attachedDatabase, alias);
+  }
+}
+
+class AppSetting extends DataClass implements Insertable<AppSetting> {
+  final String key;
+  final String value;
+  const AppSetting({required this.key, required this.value});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['key'] = Variable<String>(key);
+    map['value'] = Variable<String>(value);
+    return map;
+  }
+
+  AppSettingsCompanion toCompanion(bool nullToAbsent) {
+    return AppSettingsCompanion(key: Value(key), value: Value(value));
+  }
+
+  factory AppSetting.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AppSetting(
+      key: serializer.fromJson<String>(json['key']),
+      value: serializer.fromJson<String>(json['value']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'key': serializer.toJson<String>(key),
+      'value': serializer.toJson<String>(value),
+    };
+  }
+
+  AppSetting copyWith({String? key, String? value}) =>
+      AppSetting(key: key ?? this.key, value: value ?? this.value);
+  AppSetting copyWithCompanion(AppSettingsCompanion data) {
+    return AppSetting(
+      key: data.key.present ? data.key.value : this.key,
+      value: data.value.present ? data.value.value : this.value,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AppSetting(')
+          ..write('key: $key, ')
+          ..write('value: $value')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(key, value);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AppSetting &&
+          other.key == this.key &&
+          other.value == this.value);
+}
+
+class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
+  final Value<String> key;
+  final Value<String> value;
+  final Value<int> rowid;
+  const AppSettingsCompanion({
+    this.key = const Value.absent(),
+    this.value = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AppSettingsCompanion.insert({
+    required String key,
+    required String value,
+    this.rowid = const Value.absent(),
+  }) : key = Value(key),
+       value = Value(value);
+  static Insertable<AppSetting> custom({
+    Expression<String>? key,
+    Expression<String>? value,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (key != null) 'key': key,
+      if (value != null) 'value': value,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AppSettingsCompanion copyWith({
+    Value<String>? key,
+    Value<String>? value,
+    Value<int>? rowid,
+  }) {
+    return AppSettingsCompanion(
+      key: key ?? this.key,
+      value: value ?? this.value,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (key.present) {
+      map['key'] = Variable<String>(key.value);
+    }
+    if (value.present) {
+      map['value'] = Variable<String>(value.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AppSettingsCompanion(')
+          ..write('key: $key, ')
+          ..write('value: $value, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $FavoritesTable favorites = $FavoritesTable(this);
   late final $PlaylistsTable playlists = $PlaylistsTable(this);
   late final $PlaylistSongsTable playlistSongs = $PlaylistSongsTable(this);
+  late final $PlaybackSessionsTable playbackSessions = $PlaybackSessionsTable(
+    this,
+  );
+  late final $AppSettingsTable appSettings = $AppSettingsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -643,6 +1369,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     favorites,
     playlists,
     playlistSongs,
+    playbackSessions,
+    appSettings,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -1288,6 +2016,427 @@ typedef $$PlaylistSongsTableProcessedTableManager =
       PlaylistSong,
       PrefetchHooks Function({bool playlistId})
     >;
+typedef $$PlaybackSessionsTableCreateCompanionBuilder =
+    PlaybackSessionsCompanion Function({
+      Value<int> id,
+      required String songId,
+      Value<int> position,
+      required String queueSongIds,
+      required int currentIndex,
+      Value<bool> isShuffle,
+      Value<String> repeatMode,
+      Value<String> originalQueueSongIds,
+    });
+typedef $$PlaybackSessionsTableUpdateCompanionBuilder =
+    PlaybackSessionsCompanion Function({
+      Value<int> id,
+      Value<String> songId,
+      Value<int> position,
+      Value<String> queueSongIds,
+      Value<int> currentIndex,
+      Value<bool> isShuffle,
+      Value<String> repeatMode,
+      Value<String> originalQueueSongIds,
+    });
+
+class $$PlaybackSessionsTableFilterComposer
+    extends Composer<_$AppDatabase, $PlaybackSessionsTable> {
+  $$PlaybackSessionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get songId => $composableBuilder(
+    column: $table.songId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get queueSongIds => $composableBuilder(
+    column: $table.queueSongIds,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get currentIndex => $composableBuilder(
+    column: $table.currentIndex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isShuffle => $composableBuilder(
+    column: $table.isShuffle,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get repeatMode => $composableBuilder(
+    column: $table.repeatMode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get originalQueueSongIds => $composableBuilder(
+    column: $table.originalQueueSongIds,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$PlaybackSessionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $PlaybackSessionsTable> {
+  $$PlaybackSessionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get songId => $composableBuilder(
+    column: $table.songId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get queueSongIds => $composableBuilder(
+    column: $table.queueSongIds,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get currentIndex => $composableBuilder(
+    column: $table.currentIndex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isShuffle => $composableBuilder(
+    column: $table.isShuffle,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get repeatMode => $composableBuilder(
+    column: $table.repeatMode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get originalQueueSongIds => $composableBuilder(
+    column: $table.originalQueueSongIds,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$PlaybackSessionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PlaybackSessionsTable> {
+  $$PlaybackSessionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get songId =>
+      $composableBuilder(column: $table.songId, builder: (column) => column);
+
+  GeneratedColumn<int> get position =>
+      $composableBuilder(column: $table.position, builder: (column) => column);
+
+  GeneratedColumn<String> get queueSongIds => $composableBuilder(
+    column: $table.queueSongIds,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get currentIndex => $composableBuilder(
+    column: $table.currentIndex,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isShuffle =>
+      $composableBuilder(column: $table.isShuffle, builder: (column) => column);
+
+  GeneratedColumn<String> get repeatMode => $composableBuilder(
+    column: $table.repeatMode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get originalQueueSongIds => $composableBuilder(
+    column: $table.originalQueueSongIds,
+    builder: (column) => column,
+  );
+}
+
+class $$PlaybackSessionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PlaybackSessionsTable,
+          PlaybackSession,
+          $$PlaybackSessionsTableFilterComposer,
+          $$PlaybackSessionsTableOrderingComposer,
+          $$PlaybackSessionsTableAnnotationComposer,
+          $$PlaybackSessionsTableCreateCompanionBuilder,
+          $$PlaybackSessionsTableUpdateCompanionBuilder,
+          (
+            PlaybackSession,
+            BaseReferences<
+              _$AppDatabase,
+              $PlaybackSessionsTable,
+              PlaybackSession
+            >,
+          ),
+          PlaybackSession,
+          PrefetchHooks Function()
+        > {
+  $$PlaybackSessionsTableTableManager(
+    _$AppDatabase db,
+    $PlaybackSessionsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PlaybackSessionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PlaybackSessionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PlaybackSessionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> songId = const Value.absent(),
+                Value<int> position = const Value.absent(),
+                Value<String> queueSongIds = const Value.absent(),
+                Value<int> currentIndex = const Value.absent(),
+                Value<bool> isShuffle = const Value.absent(),
+                Value<String> repeatMode = const Value.absent(),
+                Value<String> originalQueueSongIds = const Value.absent(),
+              }) => PlaybackSessionsCompanion(
+                id: id,
+                songId: songId,
+                position: position,
+                queueSongIds: queueSongIds,
+                currentIndex: currentIndex,
+                isShuffle: isShuffle,
+                repeatMode: repeatMode,
+                originalQueueSongIds: originalQueueSongIds,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String songId,
+                Value<int> position = const Value.absent(),
+                required String queueSongIds,
+                required int currentIndex,
+                Value<bool> isShuffle = const Value.absent(),
+                Value<String> repeatMode = const Value.absent(),
+                Value<String> originalQueueSongIds = const Value.absent(),
+              }) => PlaybackSessionsCompanion.insert(
+                id: id,
+                songId: songId,
+                position: position,
+                queueSongIds: queueSongIds,
+                currentIndex: currentIndex,
+                isShuffle: isShuffle,
+                repeatMode: repeatMode,
+                originalQueueSongIds: originalQueueSongIds,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$PlaybackSessionsTable, PlaybackSession>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $PlaybackSessionsTable,
+                    PlaybackSession
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$PlaybackSessionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PlaybackSessionsTable,
+      PlaybackSession,
+      $$PlaybackSessionsTableFilterComposer,
+      $$PlaybackSessionsTableOrderingComposer,
+      $$PlaybackSessionsTableAnnotationComposer,
+      $$PlaybackSessionsTableCreateCompanionBuilder,
+      $$PlaybackSessionsTableUpdateCompanionBuilder,
+      (
+        PlaybackSession,
+        BaseReferences<_$AppDatabase, $PlaybackSessionsTable, PlaybackSession>,
+      ),
+      PlaybackSession,
+      PrefetchHooks Function()
+    >;
+typedef $$AppSettingsTableCreateCompanionBuilder =
+    AppSettingsCompanion Function({
+      required String key,
+      required String value,
+      Value<int> rowid,
+    });
+typedef $$AppSettingsTableUpdateCompanionBuilder =
+    AppSettingsCompanion Function({
+      Value<String> key,
+      Value<String> value,
+      Value<int> rowid,
+    });
+
+class $$AppSettingsTableFilterComposer
+    extends Composer<_$AppDatabase, $AppSettingsTable> {
+  $$AppSettingsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get key => $composableBuilder(
+    column: $table.key,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get value => $composableBuilder(
+    column: $table.value,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$AppSettingsTableOrderingComposer
+    extends Composer<_$AppDatabase, $AppSettingsTable> {
+  $$AppSettingsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get key => $composableBuilder(
+    column: $table.key,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get value => $composableBuilder(
+    column: $table.value,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$AppSettingsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $AppSettingsTable> {
+  $$AppSettingsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get key =>
+      $composableBuilder(column: $table.key, builder: (column) => column);
+
+  GeneratedColumn<String> get value =>
+      $composableBuilder(column: $table.value, builder: (column) => column);
+}
+
+class $$AppSettingsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $AppSettingsTable,
+          AppSetting,
+          $$AppSettingsTableFilterComposer,
+          $$AppSettingsTableOrderingComposer,
+          $$AppSettingsTableAnnotationComposer,
+          $$AppSettingsTableCreateCompanionBuilder,
+          $$AppSettingsTableUpdateCompanionBuilder,
+          (
+            AppSetting,
+            BaseReferences<_$AppDatabase, $AppSettingsTable, AppSetting>,
+          ),
+          AppSetting,
+          PrefetchHooks Function()
+        > {
+  $$AppSettingsTableTableManager(_$AppDatabase db, $AppSettingsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AppSettingsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AppSettingsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AppSettingsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> key = const Value.absent(),
+            Value<String> value = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) => AppSettingsCompanion(key: key, value: value, rowid: rowid),
+          createCompanionCallback:
+              ({
+                required String key,
+                required String value,
+                Value<int> rowid = const Value.absent(),
+              }) => AppSettingsCompanion.insert(
+                key: key,
+                value: value,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$AppSettingsTable, AppSetting>(table),
+                  BaseReferences<_$AppDatabase, $AppSettingsTable, AppSetting>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$AppSettingsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $AppSettingsTable,
+      AppSetting,
+      $$AppSettingsTableFilterComposer,
+      $$AppSettingsTableOrderingComposer,
+      $$AppSettingsTableAnnotationComposer,
+      $$AppSettingsTableCreateCompanionBuilder,
+      $$AppSettingsTableUpdateCompanionBuilder,
+      (
+        AppSetting,
+        BaseReferences<_$AppDatabase, $AppSettingsTable, AppSetting>,
+      ),
+      AppSetting,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -1298,4 +2447,8 @@ class $AppDatabaseManager {
       $$PlaylistsTableTableManager(_db, _db.playlists);
   $$PlaylistSongsTableTableManager get playlistSongs =>
       $$PlaylistSongsTableTableManager(_db, _db.playlistSongs);
+  $$PlaybackSessionsTableTableManager get playbackSessions =>
+      $$PlaybackSessionsTableTableManager(_db, _db.playbackSessions);
+  $$AppSettingsTableTableManager get appSettings =>
+      $$AppSettingsTableTableManager(_db, _db.appSettings);
 }

@@ -1,7 +1,7 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../data/playlist_repository.dart';
+import '../../data/Repository/playlist_repository.dart';
 import 'playlist_event.dart';
 import 'playlist_state.dart';
 
