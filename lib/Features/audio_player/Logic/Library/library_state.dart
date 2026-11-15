@@ -5,10 +5,7 @@ class LibraryState extends Equatable {
 
   final String? selectedItem;
 
-  const LibraryState({
-    this.selectedSection = 'Songs',
-    this.selectedItem,
-  });
+  const LibraryState({this.selectedSection = 'Songs', this.selectedItem});
 
   LibraryState copyWith({
     String? selectedSection,

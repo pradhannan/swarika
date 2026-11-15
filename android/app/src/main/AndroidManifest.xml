@@ -3,11 +3,12 @@
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />    //on android 13+
 //for older android version we need to provide storage permission
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 <uses-permission android:name="android.permission.WAKE_LOCK" />  //	Allows the audio service to keep the device's CPU awake when necessary during playback
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />  //Allows the app to run a foreground service
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />   //Declares that the foreground service is being used for media playback. Required for target SDK 34.
     <application
-        android:label="media_player_app"
+        android:label="Swarika"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

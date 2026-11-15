@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:media_player_app/Features/audio_player/domain/song_model.dart';
 import 'package:media_player_app/Features/audio_player/presentation/widgets/collapsing_title.dart';
@@ -9,11 +8,7 @@ class GenrePage extends StatelessWidget {
   final String genre;
   final List<SongModel> songs;
 
-  const GenrePage({
-    super.key,
-    required this.genre,
-    required this.songs,
-  });
+  const GenrePage({super.key, required this.genre, required this.songs});
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +34,8 @@ class GenrePage extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
                   child: Text(
                     '${songs.length} Songs',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                    style: Theme.of(context).textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
@@ -49,23 +43,17 @@ class GenrePage extends StatelessWidget {
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                 sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final song = songs[index];
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final song = songs[index];
 
-                      return SongTile(song: song, playlist: songs,);
-                    },
-                    childCount: songs.length,
-                  ),
+                    return SongTile(song: song, playlist: songs);
+                  }, childCount: songs.length),
                 ),
               ),
               const SliverToBoxAdapter(child: SizedBox(height: 90)),
             ],
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: MiniPlayer(),
-          ),
+          Align(alignment: Alignment.bottomCenter, child: MiniPlayer()),
         ],
       ),
     );

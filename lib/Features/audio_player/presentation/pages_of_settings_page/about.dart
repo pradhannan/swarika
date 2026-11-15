@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -31,26 +30,21 @@ class AboutScreen extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
               child: Column(
                 children: [
-                  // App icon temp
-                  Container(
-                    height: 96,
-                    width: 96,
-                    decoration: BoxDecoration(
-                      color: colors.primaryContainer,
-                      borderRadius: BorderRadius.circular(28),
-                    ),
-                    child: Icon(
-                      Icons.music_note_rounded,
-                      size: 52,
-                      color: colors.onPrimaryContainer,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.asset(
+                      'assets/swarika_app_icon.png',
+                      width: 200,
+                      height: 200,
+                      fit: BoxFit.cover,
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 12),
 
                   // App name
                   Text(
-                    'S U R  T A A L',
+                    'S W A R I K A',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.poppins(
                       color: colors.onSurface,
@@ -58,15 +52,16 @@ class AboutScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  const SizedBox(height: 5),
 
-                  const SizedBox(height: 8),
-
-                  // Version
                   Text(
-                    'Version 1.0.0',
-                    style: TextStyle(
-                      color: colors.onSurfaceVariant,
-                      fontSize: 14,
+                    'Your Music. Your Rhythm.',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(
+                      color: colors.primary,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.4,
                     ),
                   ),
 
@@ -78,10 +73,23 @@ class AboutScreen extends StatelessWidget {
                     'you a clean and enjoyable way to listen to your '
                     'local music.',
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.bitcountInk(
-                      color: colors.onSurfaceVariant,
-                      fontSize: 15,
-                      height: 1.5,
+                    style: GoogleFonts.poppins(
+                      color: colors.onSurface.withValues(alpha: 0.7),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                      height: 1.7,
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  Text(
+                    'VERSION 1.0.0',
+                    style: GoogleFonts.inter(
+                      color: colors.onSurface.withValues(alpha: 0.5),
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.5,
                     ),
                   ),
 
@@ -90,54 +98,32 @@ class AboutScreen extends StatelessWidget {
                   Divider(color: colors.outlineVariant),
 
                   const SizedBox(height: 24),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'App Information',
+                      style: GoogleFonts.inter(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: colors.onSurface,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
 
-                  // Developer
                   _AboutItem(
-                    icon: Icons.person_outline,
-                    title: 'Developed by',
+                    icon: Icons.person_outline_rounded,
+                    title: 'Developer',
                     value: 'The Pradhan',
                   ),
+                  const SizedBox(height: 12),
 
-                  const SizedBox(height: 20),
-
-                  // Framework
                   _AboutItem(
                     icon: Icons.code_rounded,
-                    title: 'Built with',
-                    value: 'Flutter',
-                  ),
+                    title: 'GitHub',
+                    value: 'View project source code',
+                    trailing: true,
 
-                  const SizedBox(height: 28),
-
-                  Divider(color: colors.outlineVariant),
-
-                  const SizedBox(height: 20),
-
-                  // CHANGED: Clickable GitHub link
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: Icon(
-                      Icons.code_rounded,
-                      color: colors.primary,
-                    ),
-                    title: Text(
-                      'GitHub',
-                      style: TextStyle(
-                        color: colors.onSurface,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    subtitle: Text(
-                      'View the project source code',
-                      style: TextStyle(
-                        color: colors.onSurfaceVariant,
-                      ),
-                    ),
-                    trailing: Icon(
-                      Icons.open_in_new_rounded,
-                      color: colors.onSurfaceVariant,
-                      size: 18,
-                    ),
                     onTap: () async {
                       final uri = Uri.parse(
                         'https://github.com/pradhannan/offline_media_player',
@@ -149,48 +135,83 @@ class AboutScreen extends StatelessWidget {
                       );
                     },
                   ),
+                  const SizedBox(height: 12),
 
-                  // Licenses
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: Icon(
-                      Icons.description_outlined,
-                      color: colors.primary,
-                    ),
-                    title: Text(
-                      'Licenses',
-                      style: TextStyle(
-                        color: colors.onSurface,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    subtitle: Text(
-                      'View third-party licenses',
-                      style: TextStyle(
-                        color: colors.onSurfaceVariant,
-                      ),
-                    ),
-                    trailing: Icon(
-                      Icons.chevron_right,
-                      color: colors.onSurfaceVariant,
-                    ),
+                  _AboutItem(
+                    icon: Icons.description_outlined,
+                    title: 'Licenses',
+                    value: 'View third-party licenses',
+                    trailing: true,
+
                     onTap: () {
                       showLicensePage(
                         context: context,
-                        applicationName: 'S U R  T A A L',
+                        applicationName: 'Swarika',
                         applicationVersion: '1.0.0',
                       );
                     },
                   ),
 
+                  const SizedBox(height: 12),
+
+                  _AboutItem(
+                    icon: Icons.privacy_tip_outlined,
+                    title: 'Privacy Policy',
+                    value: 'How Swarika handles your data',
+                    trailing: true,
+
+                    onTap: () async {
+                      final uri = Uri.parse(
+                        'https://pradhannan.github.io/offline_media_player/privacy-policy.html',
+                      );
+
+                      await launchUrl(
+                        uri,
+                        mode: LaunchMode.externalApplication,
+                      );
+                    },
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  _AboutItem(
+                    icon: Icons.gavel_rounded,
+                    title: 'Terms & Conditions',
+                    value: 'Terms for using Swarika',
+                    trailing: true,
+
+                    onTap: () async {
+                      final uri = Uri.parse(
+                        'https://pradhannan.github.io/offline_media_player/terms-and-conditions.html',
+                      );
+
+                      await launchUrl(
+                        uri,
+                        mode: LaunchMode.externalApplication,
+                      );
+                    },
+                  ),
                   const SizedBox(height: 32),
 
-                  Text(
-                    'Made with Flutter ❤️',
-                    style: TextStyle(
-                      color: colors.onSurfaceVariant,
-                      fontSize: 13,
-                    ),
+                  // Framework
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.flutter_dash_rounded,
+                        size: 18,
+                        color: colors.primary,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Built with Flutter',
+                        style: GoogleFonts.inter(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: colors.onSurface.withValues(alpha: 0.7),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -206,47 +227,72 @@ class _AboutItem extends StatelessWidget {
   final IconData icon;
   final String title;
   final String value;
+  final VoidCallback? onTap;
+
+  final bool trailing;
 
   const _AboutItem({
     required this.icon,
     required this.title,
     required this.value,
+    this.onTap,
+
+    this.trailing = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
-    return Row(
-      children: [
-        Icon(
-          icon,
-          color: colors.primary,
-          size: 24,
-        ),
-        const SizedBox(width: 16),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                color: colors.onSurfaceVariant,
-                fontSize: 13,
+    return Material(
+      color: colors.surface,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+          decoration: BoxDecoration(
+            color: colors.surface,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, color: colors.primary, size: 22),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        color: colors.onSurface.withValues(alpha: 0.55),
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      value,
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: colors.onSurface,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 3),
-            Text(
-              value,
-              style: GoogleFonts.kablammo(
-                color: colors.onSurface,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
+              if (trailing)
+                Icon(
+                  Icons.open_in_new_rounded,
+                  size: 18,
+                  color: colors.onSurfaceVariant,
+                ),
+            ],
+          ),
         ),
-      ],
+      ),
     );
   }
 }

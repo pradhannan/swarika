@@ -1,19 +1,15 @@
 import 'package:equatable/equatable.dart';
 import 'package:media_player_app/Features/audio_player/domain/song_model.dart';
 
-
-
-abstract class PlayerEvent extends Equatable{
-
+abstract class PlayerEvent extends Equatable {
   const PlayerEvent();
   @override
-   List <Object> get props => [];
+  List<Object> get props => [];
 }
 
-class PlaySongEvent extends PlayerEvent{
-  
- final SongModel song; 
- final List<SongModel> playlist;
+class PlaySongEvent extends PlayerEvent {
+  final SongModel song;
+  final List<SongModel> playlist;
   const PlaySongEvent(this.song, this.playlist);
 
   @override
@@ -30,11 +26,9 @@ class SeekPositionEvent extends PlayerEvent {
   List<Object> get props => [position];
 }
 
-
 class NextSongEvent extends PlayerEvent {}
 
 class PreviousSongEvent extends PlayerEvent {}
-
 
 //When Android's notification changes the track, the stream listener will dispatch this event
 //The bloc will then update its state through a normal event handler, where emit is safe
@@ -47,7 +41,6 @@ class CurrentIndexChangedEvent extends PlayerEvent {
   List<Object> get props => [index];
 }
 
-
 class ReorderQueueEvent extends PlayerEvent {
   final int oldIndex;
   final int newIndex;
@@ -59,9 +52,10 @@ class ReorderQueueEvent extends PlayerEvent {
 }
 
 class ToggleRepeatEvent extends PlayerEvent {}
-class HandleSongCompletionEvent extends PlayerEvent {}
-class ToggleShuffleEvent extends PlayerEvent {}
 
+class HandleSongCompletionEvent extends PlayerEvent {}
+
+class ToggleShuffleEvent extends PlayerEvent {}
 
 class PlayNextEvent extends PlayerEvent {
   final SongModel song;
@@ -90,7 +84,6 @@ class RemoveFromQueueEvent extends PlayerEvent {
   List<Object> get props => [index];
 }
 
-
 class StartSleepTimerEvent extends PlayerEvent {
   final Duration duration;
 
@@ -101,6 +94,7 @@ class StartSleepTimerEvent extends PlayerEvent {
 }
 
 class CancelSleepTimerEvent extends PlayerEvent {}
+
 class SleepAfterCurrentSongEvent extends PlayerEvent {}
 
 class SleepTimerExpiredEvent extends PlayerEvent {}

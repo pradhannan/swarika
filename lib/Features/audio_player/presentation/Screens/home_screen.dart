@@ -27,200 +27,196 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AudioBloc, AudioState>(
-
       listener: (context, state) {
         if (state is AudioLoaded && state.songs.isNotEmpty) {
           // Trigger session restoration once songs are loaded from device
           context.read<PlayerBloc>().add(
-                RestorePlaybackSessionEvent( state.songs),
-              );
+            RestorePlaybackSessionEvent(state.songs),
+          );
         }
       },
-        child:  Scaffold(
-          body: Stack(
-            children: [
-              CustomScrollView(
-                slivers: [
-                  SliverAppBar(
-                    pinned: true,
-                    expandedHeight: 160,
-                    collapsedHeight: 78,
-        
-                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                    surfaceTintColor: Colors.transparent,
-                    forceMaterialTransparency: false,
-                    flexibleSpace: FlexibleSpaceBar(
-                      expandedTitleScale: 1.8,
-        
-                      title: Text(
-                        'S U R   T A A L',
-                        style: GoogleFonts.poppins(
-                          fontSize: 24,
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.bold,
-                        ),
+      child: Scaffold(
+        body: Stack(
+          children: [
+            CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  pinned: true,
+                  expandedHeight: 160,
+                  collapsedHeight: 78,
+
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  surfaceTintColor: Colors.transparent,
+                  forceMaterialTransparency: false,
+                  flexibleSpace: FlexibleSpaceBar(
+                    expandedTitleScale: 1.8,
+
+                    title: Text(
+                      'S W A R I K A',
+                      style: GoogleFonts.poppins(
+                        fontSize: 24,
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.bold,
                       ),
-                      titlePadding: const EdgeInsets.only(left: 16, bottom: 16),
-                      collapseMode: CollapseMode.pin,
                     ),
-                    actions: [
-                      IconButton(
-                        onPressed: () {
-                          final audioState = context.read<AudioBloc>().state;
-        
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => BlocProvider(
-                                create: (_) => SearchBloc()
-                                  ..add(
-                                    SearchSongsLoadedEvent(
-                                      audioState is AudioLoaded
-                                          ? audioState.songs
-                                          : [], // If audioState is AudioLoaded, pass its song list. Otherwise, pass an empty list.
-                                    ),
+                    titlePadding: const EdgeInsets.only(left: 16, bottom: 16),
+                    collapseMode: CollapseMode.pin,
+                  ),
+                  actions: [
+                    IconButton(
+                      onPressed: () {
+                        final audioState = context.read<AudioBloc>().state;
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => BlocProvider(
+                              create: (_) => SearchBloc()
+                                ..add(
+                                  SearchSongsLoadedEvent(
+                                    audioState is AudioLoaded
+                                        ? audioState.songs
+                                        : [], // If audioState is AudioLoaded, pass its song list. Otherwise, pass an empty list.
                                   ),
-                                child: const SearchScreen(),
-                              ),
+                                ),
+                              child: const SearchScreen(),
                             ),
-                          );
-                        },
-                        icon: Icon(
-                          Icons.search_rounded,
-                          size: 28,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SettingScreen(),
-                            ),
-                          );
-                        },
-                        icon: Icon(
-                          Icons.settings,
-                          size: 28,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SliverPersistentHeader(
-                    pinned:
-                        true, // Keeps the folder section visible while scrolling.
-                    delegate: FolderSectionHeaderDelegate(
-                      child: BlocBuilder<LibraryBloc, LibraryState>(
-                        builder: (context, libraryState) {
-                          return FolderSection(
-                            // Highlights the currently selected section.
-                            selectedSection: libraryState.selectedSection,
-        
-                            // Updates LibraryBloc when a tile is tapped.
-                            onSectionSelected: (section) {
-                              context.read<LibraryBloc>().add(
-                                SelectLibrarySection(section),
-                              );
-                            },
-                          );
-                        },
+                          ),
+                        );
+                      },
+                      icon: Icon(
+                        Icons.search_rounded,
+                        size: 28,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SettingScreen(),
+                          ),
+                        );
+                      },
+                      icon: Icon(
+                        Icons.settings,
+                        size: 28,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                  ],
+                ),
+                SliverPersistentHeader(
+                  pinned:
+                      true, // Keeps the folder section visible while scrolling.
+                  delegate: FolderSectionHeaderDelegate(
+                    child: BlocBuilder<LibraryBloc, LibraryState>(
+                      builder: (context, libraryState) {
+                        return FolderSection(
+                          // Highlights the currently selected section.
+                          selectedSection: libraryState.selectedSection,
+
+                          // Updates LibraryBloc when a tile is tapped.
+                          onSectionSelected: (section) {
+                            context.read<LibraryBloc>().add(
+                              SelectLibrarySection(section),
+                            );
+                          },
+                        );
+                      },
+                    ),
                   ),
-        
-                  BlocBuilder<LibraryBloc, LibraryState>(
-                    builder: (context, libraryState) {
-                      return BlocBuilder<AudioBloc, AudioState>(
-                        builder: (context, state) {
-                          if (state is AudioLoading) {
-                            return const SliverToBoxAdapter(
-                              child: Center(child: CircularProgressIndicator()),
-                            );
-                          } else if (state is AudioError) {
-                            return SliverToBoxAdapter(
-                              child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Error ${state.message}',
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    const SizedBox(height: 16),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        context.read<AudioBloc>().add(
-                                          FetchSongsEvent(),
-                                        );
-                                      },
-                                      child: const Text('Retry'),
-                                    ),
-                                  ],
-                                ),
+                ),
+
+                BlocBuilder<LibraryBloc, LibraryState>(
+                  builder: (context, libraryState) {
+                    return BlocBuilder<AudioBloc, AudioState>(
+                      builder: (context, state) {
+                        if (state is AudioLoading) {
+                          // return const SliverToBoxAdapter(
+                          //   child: Center(child: CircularProgressIndicator()),
+                          // );
+                          //don't show anything
+                        } else if (state is AudioError) {
+                          return SliverToBoxAdapter(
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Error ${state.message}',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      context.read<AudioBloc>().add(
+                                        FetchSongsEvent(),
+                                      );
+                                    },
+                                    child: const Text('Retry'),
+                                  ),
+                                ],
                               ),
-                            );
-                          } else if (state is AudioLoaded) {
-                            
-                            if (state.songs.isEmpty) {
-                              return const SliverToBoxAdapter(
-                                child: Center(
-                                  child: Text('No songs found on device.'),
-                                ),
-                              );
-                            }
-        
-                            if (libraryState.selectedSection == 'Albums') {
-                              return AlbumList(songs: state.songs);
-                            }
-        
-                            
-                            if (libraryState.selectedSection == 'Artists') {
-                              return ArtistList(songs: state.songs);
-                            }
-                            if (libraryState.selectedSection == 'Genres'){
-                              return GenreList(songs: state.songs);
-                            }
-        
-                            if (libraryState.selectedSection == 'Playlists'){
-                              return PlaylistList(songs: state.songs);
-                            }
-        
-        
-        
-        
-                            return SliverPadding(
-                              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                              sliver: SliverList(
-                                delegate: SliverChildBuilderDelegate((
-                                  context,
-                                  index,
-                                ) {
-                                  final song = state.songs[index];
-        
-                                  return SongTile(song: song, );
-                                }, childCount: state.songs.length),
+                            ),
+                          );
+                        } else if (state is AudioLoaded) {
+                          if (state.songs.isEmpty) {
+                            return const SliverToBoxAdapter(
+                              child: Center(
+                                child: Text('No songs found on device.'),
                               ),
                             );
                           }
-        
-                          return const SliverToBoxAdapter(
-                            child: Center(
-                              child: Text('Press fetch to load songs.'),
+
+                          if (libraryState.selectedSection == 'Albums') {
+                            return AlbumList(songs: state.songs);
+                          }
+
+                          if (libraryState.selectedSection == 'Artists') {
+                            return ArtistList(songs: state.songs);
+                          }
+                          if (libraryState.selectedSection == 'Genres') {
+                            return GenreList(songs: state.songs);
+                          }
+
+                          if (libraryState.selectedSection == 'Playlists') {
+                            return PlaylistList(songs: state.songs);
+                          }
+
+                          return SliverPadding(
+                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                            sliver: SliverList(
+                              delegate: SliverChildBuilderDelegate((
+                                context,
+                                index,
+                              ) {
+                                final song = state.songs[index];
+
+                                return SongTile(song: song);
+                              }, childCount: state.songs.length),
                             ),
                           );
-                        },
-                      );
-                    },
-                  ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 90)),
-                ],
-              ),
-              Align(alignment: Alignment.bottomCenter, child: MiniPlayer()),
-            ],
-          ),
-    ));
+                        }
+
+                        return const SliverToBoxAdapter(
+                          child: Center(
+                            child: Text(''), //show nothing
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+                const SliverToBoxAdapter(child: SizedBox(height: 90)),
+              ],
+            ),
+            Align(alignment: Alignment.bottomCenter, child: MiniPlayer()),
+          ],
+        ),
+      ),
+    );
   }
 }
 

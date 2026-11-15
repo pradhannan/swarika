@@ -4,22 +4,22 @@ import 'package:media_player_app/Features/audio_player/Logic/Player/player_state
 class PlayerSecondaryControls extends StatelessWidget {
   final bool isFavorite;
   final bool isShuffle;
-    final RepeatMode repeatMode;
+  final RepeatMode repeatMode;
   final VoidCallback onFavoriteToggle;
   final VoidCallback onShuffleToggle;
   final VoidCallback onRepeatToggle;
   final VoidCallback onQueueTap;
 
- const PlayerSecondaryControls({
-  super.key,
-  required this.isFavorite,
-  required this.isShuffle,
-  required this.repeatMode,
-  required this.onFavoriteToggle,
-  required this.onShuffleToggle,
-  required this.onRepeatToggle,
-  required this.onQueueTap,
-});
+  const PlayerSecondaryControls({
+    super.key,
+    required this.isFavorite,
+    required this.isShuffle,
+    required this.repeatMode,
+    required this.onFavoriteToggle,
+    required this.onShuffleToggle,
+    required this.onRepeatToggle,
+    required this.onQueueTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,36 +32,34 @@ class PlayerSecondaryControls extends StatelessWidget {
       children: [
         // Repeat Mode Toggle
         // Repeat Mode Toggle
-IconButton(
-  tooltip: switch (repeatMode) {
-    RepeatMode.off => 'Repeat Off',
-    RepeatMode.all => 'Repeat All',
-    RepeatMode.one => 'Repeat One',
-  },
-  iconSize: 26,
-  icon: Icon(
-    repeatMode == RepeatMode.one
-        ? Icons.repeat_one_rounded
-        : Icons.repeat_rounded,
-  ),
- color: repeatMode == RepeatMode.off
-    ? colors.primary
-    : colors.outline,
-  onPressed: onRepeatToggle,
-),
+        IconButton(
+          tooltip: switch (repeatMode) {
+            RepeatMode.off => 'Repeat Off',
+            RepeatMode.all => 'Repeat All',
+            RepeatMode.one => 'Repeat One',
+          },
+          iconSize: 26,
+          icon: Icon(
+            repeatMode == RepeatMode.one
+                ? Icons.repeat_one_rounded
+                : Icons.repeat_rounded,
+          ),
+          color: repeatMode == RepeatMode.off ? colors.outline : colors.primary,
+          onPressed: onRepeatToggle,
+        ),
         // Favorite Toggle
         IconButton(
-            iconSize: 26,
+          iconSize: 26,
           icon: Icon(
-            isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+            isFavorite ? Icons.favorite : Icons.favorite_border_outlined,
           ),
-          color: isFavorite ? colors.primary : colors.onSurfaceVariant,
+          color: isFavorite ? colors.primary : colors.outline,
           onPressed: onFavoriteToggle,
         ),
 
         // Queue Button
         IconButton(
-            iconSize: 26,
+          iconSize: 26,
           icon: const Icon(Icons.queue_music_rounded),
           color: colors.onSurfaceVariant,
           onPressed: onQueueTap,
@@ -69,9 +67,9 @@ IconButton(
 
         //  Shuffle Toggle
         IconButton(
-            iconSize: 26,
+          iconSize: 26,
           icon: const Icon(Icons.shuffle_rounded),
-          color: isShuffle ? colors.outline : colors.primary,
+          color: isShuffle ? colors.primary : colors.outline,
           onPressed: onShuffleToggle,
         ),
       ],

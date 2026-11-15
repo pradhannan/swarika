@@ -1,6 +1,6 @@
 {
-    "name": "media_player_app",
-    "short_name": "media_player_app",
+    "name": "Swarika",
+    "short_name": "Swarika",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

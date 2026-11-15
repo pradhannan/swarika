@@ -20,7 +20,6 @@ import 'package:media_player_app/Features/audio_player/presentation/widgets/full
 import 'package:media_player_app/Features/audio_player/Logic/Playlist/playlist_bloc.dart';
 import 'package:media_player_app/Features/audio_player/Logic/Playlist/playlist_event.dart';
 
-
 class FullPlayerScreen extends StatelessWidget {
   final SongModel song;
   const FullPlayerScreen({super.key, required this.song});
@@ -38,185 +37,216 @@ class FullPlayerScreen extends StatelessWidget {
 
               PlayerTopBar(
                 onSleepTimerTap: () {
-                    final playerBloc = context.read<PlayerBloc>();
+                  final playerBloc = context.read<PlayerBloc>();
 
-                  
-showDialog(
-  
-  context: context,
-  builder: (dialogContext) {
-    return  BlocBuilder<PlayerBloc, PlayerState>(
-          builder: (context, state) {
-
-    
-    const durations = [
-      (label: '5 minutes', duration: Duration(minutes: 5)),
-      (label: '10 minutes', duration: Duration(minutes: 10)),
-      (label: '15 minutes', duration: Duration(minutes: 15)),
-      (label: '30 minutes', duration: Duration(minutes: 30)),
-      (label: '45 minutes', duration: Duration(minutes: 45)),
-      (label: '1 hour', duration: Duration(hours: 1)),
-      (label: '1 hour 30 minutes', duration: Duration(hours: 1, minutes: 30)),
-    ];
-
-    final colors = Theme.of(context).colorScheme;
-     // Format the remaining duration as HH:MM:SS or MM:SS.
-            String formatRemaining(Duration duration) {
-              final hours = duration.inHours;
-              final minutes = duration.inMinutes.remainder(60);
-              final seconds = duration.inSeconds.remainder(60);
-
-              final mm = minutes.toString().padLeft(2, '0');
-              final ss = seconds.toString().padLeft(2, '0');  //adds 0 at the beginning if it's only one digit.
-
-              if (hours > 0) {  //if in hours the hr:mm:ss else just mm:ss
-                return '${hours.toString().padLeft(2, '0')}:$mm:$ss';
-              }
-
-              return '$mm:$ss';
-            }
-
-            final isTimerActive =
-                state is PlayerStatusState && state.isSleepTimerActive;
-
-            final sleepAfterSong =
-                state is PlayerStatusState &&
-                state.sleepAfterCurrentSong;
-
-            final remainingTime =
-                state is PlayerStatusState
-                    ? state.sleepTimeRemaining
-                    : null;
-
-
-    return Dialog(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: 380,
-          maxHeight: MediaQuery.sizeOf(context).height * 0.8,
-        ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Sleep Timer',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              const SizedBox(height: 12),
-              if (isTimerActive) ...[   ///...[ ] expects list of widgets, if true then insert all or none
-                        Icon(
-                          sleepAfterSong
-                              ? Icons.music_note_rounded
-                              : Icons.timer_outlined,
-                          size: 36,
-                          color: colors.primary,
-                        ),
-
-                        const SizedBox(height: 12),
-
-                        Text(
-                          sleepAfterSong
-                              ? 'Sleep after this song'
-                              : 'Time remaining',
-                          style: TextStyle(
-                            color: colors.onSurface,
-                            fontSize: 15,
-                          ),
-                        ),
-                        if (!sleepAfterSong) ...[
-                          const SizedBox(height: 8),
-                          Text(
-                            remainingTime != null
-                                ? formatRemaining(remainingTime)
-                                : '--:--',
-                            style: TextStyle(
-                              color: colors.primary,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
+                  showDialog(
+                    context: context,
+                    builder: (dialogContext) {
+                      return BlocBuilder<PlayerBloc, PlayerState>(
+                        builder: (context, state) {
+                          const durations = [
+                            (
+                              label: '5 minutes',
+                              duration: Duration(minutes: 5),
                             ),
-                          ),
-                        ],
-                        const SizedBox(height: 16),
-
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              playerBloc.add(CancelSleepTimerEvent());
-                              Navigator.pop(dialogContext);
-                            },
-                            icon: const Icon(Icons.timer_off_rounded),
-                            label: const Text('Cancel Timer'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: colors.primary,
-                              foregroundColor: colors.onPrimary,
+                            (
+                              label: '10 minutes',
+                              duration: Duration(minutes: 10),
                             ),
-                          ),
-                        ),
-                      ]
+                            (
+                              label: '15 minutes',
+                              duration: Duration(minutes: 15),
+                            ),
+                            (
+                              label: '30 minutes',
+                              duration: Duration(minutes: 30),
+                            ),
+                            (
+                              label: '45 minutes',
+                              duration: Duration(minutes: 45),
+                            ),
+                            (label: '1 hour', duration: Duration(hours: 1)),
+                            (
+                              label: '1 hour 30 minutes',
+                              duration: Duration(hours: 1, minutes: 30),
+                            ),
+                          ];
 
-              else...[...durations.map(  //inner ... inserts the widgets generated by .map() into the inner list
-                (option) => ListTile(
-                  dense: true,
-                  contentPadding: EdgeInsets.zero,
-                  visualDensity: const VisualDensity(vertical: -2),
-                  title: Text(option.label),
-                  trailing: Icon(
-                    Icons.timer_outlined,
-                    color: colors.primary,
-                  ),
-                  onTap: () {
-                    context.read<PlayerBloc>().add(
-                      StartSleepTimerEvent(option.duration),
-                    );
-                    Navigator.pop(dialogContext);
-                  },
-                ),
-              ),
+                          final colors = Theme.of(context).colorScheme;
+                          // Format the remaining duration as HH:MM:SS or MM:SS.
+                          String formatRemaining(Duration duration) {
+                            final hours = duration.inHours;
+                            final minutes = duration.inMinutes.remainder(60);
+                            final seconds = duration.inSeconds.remainder(60);
 
-              const Divider(),
+                            final mm = minutes.toString().padLeft(2, '0');
+                            final ss = seconds.toString().padLeft(
+                              2,
+                              '0',
+                            ); //adds 0 at the beginning if it's only one digit.
 
-              ListTile(
-                dense: true,
-                contentPadding: EdgeInsets.zero,
-                visualDensity: const VisualDensity(vertical: -2),
-                leading: Icon(
-                  Icons.music_note_rounded,
-                  color: colors.primary,
-                ),
-                title: const Text('End of this song'),
-                onTap: () {
-                  context.read<PlayerBloc>().add(
-                    SleepAfterCurrentSongEvent(),
+                            if (hours > 0) {
+                              //if in hours the hr:mm:ss else just mm:ss
+                              return '${hours.toString().padLeft(2, '0')}:$mm:$ss';
+                            }
+
+                            return '$mm:$ss';
+                          }
+
+                          final isTimerActive =
+                              state is PlayerStatusState &&
+                              state.isSleepTimerActive;
+
+                          final sleepAfterSong =
+                              state is PlayerStatusState &&
+                              state.sleepAfterCurrentSong;
+
+                          final remainingTime = state is PlayerStatusState
+                              ? state.sleepTimeRemaining
+                              : null;
+
+                          return Dialog(
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxWidth: 380,
+                                maxHeight:
+                                    MediaQuery.sizeOf(context).height * 0.8,
+                              ),
+                              child: SingleChildScrollView(
+                                padding: const EdgeInsets.all(20),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text(
+                                      'Sleep Timer',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 12),
+                                    if (isTimerActive) ...[
+                                      ///...[ ] expects list of widgets, if true then insert all or none
+                                      Icon(
+                                        sleepAfterSong
+                                            ? Icons.music_note_rounded
+                                            : Icons.timer_outlined,
+                                        size: 36,
+                                        color: colors.primary,
+                                      ),
+
+                                      const SizedBox(height: 12),
+
+                                      Text(
+                                        sleepAfterSong
+                                            ? 'Sleep after this song'
+                                            : 'Time remaining',
+                                        style: TextStyle(
+                                          color: colors.onSurface,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                      if (!sleepAfterSong) ...[
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          remainingTime != null
+                                              ? formatRemaining(remainingTime)
+                                              : '--:--',
+                                          style: TextStyle(
+                                            color: colors.primary,
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                      const SizedBox(height: 16),
+
+                                      SizedBox(
+                                        width: double.infinity,
+                                        child: ElevatedButton.icon(
+                                          onPressed: () {
+                                            playerBloc.add(
+                                              CancelSleepTimerEvent(),
+                                            );
+                                            Navigator.pop(dialogContext);
+                                          },
+                                          icon: const Icon(
+                                            Icons.timer_off_rounded,
+                                          ),
+                                          label: const Text('Cancel Timer'),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: colors.primary,
+                                            foregroundColor: colors.onPrimary,
+                                          ),
+                                        ),
+                                      ),
+                                    ] else ...[
+                                      ...durations.map(
+                                        //inner ... inserts the widgets generated by .map() into the inner list
+                                        (option) => ListTile(
+                                          dense: true,
+                                          contentPadding: EdgeInsets.zero,
+                                          visualDensity: const VisualDensity(
+                                            vertical: -2,
+                                          ),
+                                          title: Text(option.label),
+                                          trailing: Icon(
+                                            Icons.timer_outlined,
+                                            color: colors.primary,
+                                          ),
+                                          onTap: () {
+                                            context.read<PlayerBloc>().add(
+                                              StartSleepTimerEvent(
+                                                option.duration,
+                                              ),
+                                            );
+                                            Navigator.pop(dialogContext);
+                                          },
+                                        ),
+                                      ),
+
+                                      const Divider(),
+
+                                      ListTile(
+                                        dense: true,
+                                        contentPadding: EdgeInsets.zero,
+                                        visualDensity: const VisualDensity(
+                                          vertical: -2,
+                                        ),
+                                        leading: Icon(
+                                          Icons.music_note_rounded,
+                                          color: colors.primary,
+                                        ),
+                                        title: const Text('End of this song'),
+                                        onTap: () {
+                                          context.read<PlayerBloc>().add(
+                                            SleepAfterCurrentSongEvent(),
+                                          );
+                                          Navigator.pop(dialogContext);
+                                        },
+                                      ),
+
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(dialogContext),
+                                        child: Text(
+                                          'Close',
+                                          style: TextStyle(
+                                            color: colors.primary,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
                   );
-                  Navigator.pop(dialogContext);
-                },
-              ),
-
-              TextButton(
-                onPressed: () => Navigator.pop(dialogContext),
-                child: Text(
-                  'Close',
-                  style: TextStyle(color: colors.primary),
-                ),
-              ),
-            ]],
-          ),
-        ),
-      ),
-    );});
-  },
-);
-
-
-                 
-                   
                 },
               ),
 
@@ -338,11 +368,11 @@ showDialog(
                       : false;
                   final currentSong = state is PlayerStatusState
                       ? state.currentSong
-                      : song;    
+                      : song;
 
                   return BlocBuilder<PlaylistBloc, PlaylistState>(
-                     builder: (context, playlistState) {
-                       final isFavorite = playlistState.favoriteSongIds.contains(
+                    builder: (context, playlistState) {
+                      final isFavorite = playlistState.favoriteSongIds.contains(
                         currentSong.id,
                       );
                       return PlayerSecondaryControls(
@@ -363,7 +393,7 @@ showDialog(
                             );
                           }
                         },
-                      
+
                         onRepeatToggle: () {
                           context.read<PlayerBloc>().add(ToggleRepeatEvent());
                         },
@@ -377,7 +407,7 @@ showDialog(
                           );
                         },
                       );
-                    }
+                    },
                   );
                 },
               ),

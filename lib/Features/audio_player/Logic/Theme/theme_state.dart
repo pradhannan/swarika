@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
 
@@ -7,9 +6,9 @@ class ThemeState extends Equatable {
   final String selectedPalette;
   const ThemeState({
     this.themeMode = ThemeMode.dark,
-    this.selectedPalette = 'Graphite & Silver', 
+    this.selectedPalette = 'Graphite & Silver',
   });
 
   @override
-  List<Object> get props => [themeMode, selectedPalette]; 
+  List<Object> get props => [themeMode, selectedPalette];
 }

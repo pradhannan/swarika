@@ -1,4 +1,3 @@
-
 import 'package:drift/drift.dart';
 
 class PlaybackSessions extends Table {
@@ -18,17 +17,13 @@ class PlaybackSessions extends Table {
   IntColumn get currentIndex => integer()();
 
   // Shuffle status
-  BoolColumn get isShuffle =>
-      boolean().withDefault(const Constant(false))();
+  BoolColumn get isShuffle => boolean().withDefault(const Constant(false))();
 
   // Repeat mode stored as a string
-  TextColumn get repeatMode =>
-      text().withDefault(const Constant('off'))();
+  TextColumn get repeatMode => text().withDefault(const Constant('off'))();
 
-  
   TextColumn get originalQueueSongIds =>
       text().withDefault(const Constant('[]'))();
-    
 
   @override
   Set<Column> get primaryKey => {id};

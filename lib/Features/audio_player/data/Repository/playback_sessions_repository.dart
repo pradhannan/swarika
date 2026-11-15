@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
@@ -20,20 +19,20 @@ class PlaybackSessionRepository {
     required bool isShuffle,
     required String repeatMode,
   }) async {
-    await database.into(database.playbackSessions).insertOnConflictUpdate(
-      PlaybackSessionsCompanion.insert(
-        id: const Value(1),
-        songId: songId,
-        position: Value(position.inMilliseconds),
-        queueSongIds: jsonEncode(queueSongIds),
-        originalQueueSongIds: Value(
-          jsonEncode(originalQueueSongIds),
-        ),
-        currentIndex: currentIndex,
-        isShuffle: Value(isShuffle),
-        repeatMode: Value(repeatMode),
-      ),
-    );
+    await database
+        .into(database.playbackSessions)
+        .insertOnConflictUpdate(
+          PlaybackSessionsCompanion.insert(
+            id: const Value(1),
+            songId: songId,
+            position: Value(position.inMilliseconds),
+            queueSongIds: jsonEncode(queueSongIds),
+            originalQueueSongIds: Value(jsonEncode(originalQueueSongIds)),
+            currentIndex: currentIndex,
+            isShuffle: Value(isShuffle),
+            repeatMode: Value(repeatMode),
+          ),
+        );
   }
 
   Future<SavedPlaybackSession?> getSavedSession() async {

@@ -5,7 +5,6 @@ import 'package:media_player_app/Features/audio_player/Logic/Theme/theme_bloc.da
 import 'package:media_player_app/Features/audio_player/Logic/Theme/theme_event.dart';
 import 'package:media_player_app/Features/audio_player/Logic/Theme/theme_state.dart';
 import 'package:media_player_app/Features/audio_player/presentation/widgets/collapsing_title.dart';
-import 'package:media_player_app/Features/audio_player/presentation/widgets/setting_pages/color_combination_circles.dart';
 import 'package:media_player_app/Features/audio_player/presentation/widgets/setting_pages/container_settings.dart';
 
 class AppearanceSettingsScreen extends StatelessWidget {
@@ -19,8 +18,7 @@ class AppearanceSettingsScreen extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-
-           titleSpacing: 0,
+            titleSpacing: 0,
             pinned: true,
             expandedHeight: 160,
             collapsedHeight: 64,
@@ -29,7 +27,6 @@ class AppearanceSettingsScreen extends StatelessWidget {
               onPressed: () => Navigator.pop(context),
             ),
             flexibleSpace: CollapsingTitle(title: "Appearance"),
-            
           ),
 
           SliverToBoxAdapter(
@@ -62,40 +59,41 @@ class AppearanceSettingsScreen extends StatelessWidget {
                     subtitle: 'Give your player a cat-inspired look',
                     switchValue: false,
                     onSwitchChanged: (value) {
-  final colors = Theme.of(context).colorScheme;
+                      final colors = Theme.of(context).colorScheme;
 
-  ScaffoldMessenger.of(context)
-    ..hideCurrentSnackBar()
-    ..showSnackBar(
-      SnackBar(
-        content: Text(
-          '>"< Wait for upgraded version >.<',
-          style: TextStyle(
-            color: colors.onSurface,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        backgroundColor: colors.surface,
-        behavior: SnackBarBehavior.floating,
-        margin: EdgeInsets.only(
-          bottom: MediaQuery.of(context).size.height - 100,
-          left: 16,
-          right: 16,
-        ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 24,
-          vertical: 18,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: BorderSide(
-            color: colors.primary.withValues(alpha: 0.4),
-          ),
-        ),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-},),
+                      ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              '>"< Wait for upgraded version >.<',
+                              style: TextStyle(
+                                color: colors.onSurface,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            backgroundColor: colors.surface,
+                            behavior: SnackBarBehavior.floating,
+                            margin: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).size.height - 100,
+                              left: 16,
+                              right: 16,
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 18,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              side: BorderSide(
+                                color: colors.primary.withValues(alpha: 0.4),
+                              ),
+                            ),
+                            duration: const Duration(seconds: 2),
+                          ),
+                        );
+                    },
+                  ),
 
                   const SizedBox(height: 12),
 
@@ -127,11 +125,10 @@ class AppearanceSettingsScreen extends StatelessWidget {
                             fontSize: 14,
                           ),
                         ),
-
-                        
-
                         BlocBuilder<ThemeBloc, ThemeState>(
                           builder: (context, state) {
+                            final isDark = state.themeMode == ThemeMode.dark;
+
                             return GridView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
@@ -145,19 +142,207 @@ class AppearanceSettingsScreen extends StatelessWidget {
                                   ),
                               itemBuilder: (context, index) {
                                 final palette = colorPalettes[index];
-                                return ColorPalette(
-                                  name: palette.name,
-                                  colors: [
-                                    palette.darkBackground,
-                                    palette.darkPrimary,
-                                  ],
-                                  isSelected:
-                                      state.selectedPalette == palette.name,
+
+                                final background = isDark
+                                    ? palette.darkBackground
+                                    : palette.lightBackground;
+
+                                final surface = isDark
+                                    ? palette.darkSurface
+                                    : palette.lightSurface;
+
+                                final primary = isDark
+                                    ? palette.darkPrimary
+                                    : palette.lightPrimary;
+
+                                final text = isDark
+                                    ? palette.darkText
+                                    : palette.lightText;
+
+                                final isSelected =
+                                    state.selectedPalette == palette.name;
+
+                                return GestureDetector(
                                   onTap: () {
                                     context.read<ThemeBloc>().add(
                                       ColorPaletteChanged(palette.name),
                                     );
                                   },
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 200),
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: surface,
+                                      borderRadius: BorderRadius.circular(18),
+                                      border: Border.all(
+                                        color: isSelected
+                                            ? primary
+                                            : Theme.of(context).dividerColor
+                                                  .withValues(alpha: 0.25),
+                                        width: isSelected ? 2 : 1,
+                                      ),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                              11,
+                                            ),
+                                            child: Container(
+                                              color: background,
+                                              padding: const EdgeInsets.all(8),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        'Swarika',
+                                                        style: TextStyle(
+                                                          color: text,
+                                                          fontSize: 10,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      Icon(
+                                                        Icons
+                                                            .music_note_rounded,
+                                                        color: primary,
+                                                        size: 15,
+                                                      ),
+                                                    ],
+                                                  ),
+
+                                                  const SizedBox(height: 8),
+
+                                                  Row(
+                                                    children: [
+                                                      Container(
+                                                        height: 35,
+                                                        width: 35,
+                                                        decoration: BoxDecoration(
+                                                          color: primary,
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                7,
+                                                              ),
+                                                        ),
+                                                        child: const Icon(
+                                                          Icons
+                                                              .music_note_rounded,
+                                                          color: Colors.white,
+                                                          size: 19,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(width: 7),
+                                                      Expanded(
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Container(
+                                                              height: 5,
+                                                              width: 48,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                    color: text,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          5,
+                                                                        ),
+                                                                  ),
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 5,
+                                                            ),
+                                                            Container(
+                                                              height: 4,
+                                                              width: 30,
+                                                              decoration: BoxDecoration(
+                                                                color: text
+                                                                    .withValues(
+                                                                      alpha:
+                                                                          0.45,
+                                                                    ),
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      5,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+
+                                                  const Spacer(),
+
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Container(
+                                                          height: 3,
+                                                          decoration: BoxDecoration(
+                                                            color: primary,
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  5,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(width: 4),
+                                                      Icon(
+                                                        Icons
+                                                            .play_arrow_rounded,
+                                                        color: primary,
+                                                        size: 15,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+
+                                        const SizedBox(height: 7),
+
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                palette.name,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  color: text,
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ),
+                                            if (isSelected)
+                                              Icon(
+                                                Icons.check_circle_rounded,
+                                                color: primary,
+                                                size: 17,
+                                              ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 );
                               },
                             );

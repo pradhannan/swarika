@@ -1,5 +1,1 @@
-enum ProgressBarStyle {
-  linear, 
-  wavy, 
-  customCat
-}
+enum ProgressBarStyle { linear, wavy, customCat }

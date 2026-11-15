@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
-
 import 'package:media_player_app/Features/audio_player/Logic/Player/player_state.dart';
+import 'package:media_player_app/Features/audio_player/Logic/Playlist/playlist_bloc.dart';
+import 'package:media_player_app/Features/audio_player/Logic/Playlist/playlist_event.dart';
 import 'package:media_player_app/Features/audio_player/presentation/Screens/album_page.dart';
 import 'package:media_player_app/Features/audio_player/presentation/Screens/artists_page.dart';
+import 'package:media_player_app/Features/audio_player/presentation/Screens/song_info.dart';
+import 'package:media_player_app/Features/audio_player/presentation/widgets/add_to_playlist_sheet.dart';
 import 'package:media_player_app/Features/audio_player/presentation/widgets/animated_equilizer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:media_player_app/Features/audio_player/Logic/Search/search_bloc.dart';
@@ -227,13 +230,13 @@ class _SearchScreenState extends State<SearchScreen> {
 
                         return ListTile(
                           tileColor: isPlaying
-                                ? Theme.of(context).colorScheme.primary
-                                      .withValues(alpha: 0.12)
-                                : Colors.transparent,
+                              ? Theme.of(context).colorScheme.primary
+                                    .withValues(alpha: 0.12)
+                              : Colors.transparent,
                           leading: SizedBox(
                             width: 50,
                             height: 50,
-                            
+
                             child: Stack(
                               alignment: Alignment.center,
                               children: [
@@ -242,7 +245,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   type: ArtworkType.AUDIO,
                                   artworkWidth: 50,
                                   artworkHeight: 50,
-                                   quality: 100,
+                                  quality: 100,
                                   size: 1000,
                                   keepOldArtwork: true,
                                   artworkFit: BoxFit.cover,
@@ -277,11 +280,122 @@ class _SearchScreenState extends State<SearchScreen> {
                               ],
                             ),
                           ),
-                          trailing: IconButton(
+                          trailing: PopupMenuButton<String>(
                             icon: const Icon(Icons.more_vert),
-                            onPressed: () {
-                              // We'll add the menu actions next.
+                            onSelected: (value) {
+                              switch (value) {
+                                case 'play_next':
+                                  context.read<PlayerBloc>().add(
+                                    PlayNextEvent(song),
+                                  );
+                                  break;
+
+                                case 'add_queue':
+                                  context.read<PlayerBloc>().add(
+                                    AddToQueueEvent(song),
+                                  );
+                                  break;
+
+                                case 'album':
+                                  final songs =
+                                      context.read<AudioBloc>().state
+                                          as AudioLoaded;
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => AlbumPage(
+                                        album: song.album,
+                                        songs: songs.songs
+                                            .where((s) => s.album == song.album)
+                                            .toList(),
+                                      ),
+                                    ),
+                                  );
+                                  break;
+
+                                case 'artist':
+                                  final songs =
+                                      context.read<AudioBloc>().state
+                                          as AudioLoaded;
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => ArtistsPage(
+                                        artist: song.artist,
+                                        songs: songs.songs
+                                            .where(
+                                              (s) => s.artist == song.artist,
+                                            )
+                                            .toList(),
+                                      ),
+                                    ),
+                                  );
+                                  break;
+
+                                case 'playlist':
+                                  final audioState = context
+                                      .read<AudioBloc>()
+                                      .state;
+
+                                  if (audioState is AudioLoaded) {
+                                    context.read<PlaylistBloc>().add(
+                                      const LoadPlaylistsEvent(),
+                                    );
+
+                                    context.read<PlaylistBloc>().add(
+                                      const LoadFavoritesEvent(),
+                                    );
+
+                                    showModalBottomSheet(
+                                      context: context,
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                      builder: (context) => AddToPlaylistSheet(
+                                        song: song,
+                                        allSongs: audioState.songs,
+                                      ),
+                                    );
+                                  }
+                                  break;
+
+                                case 'details':
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => SongInfo(song: song),
+                                    ),
+                                  );
+                                  break;
+                              }
                             },
+                            itemBuilder: (context) => [
+                              const PopupMenuItem(
+                                value: 'play_next',
+                                child: Text('Play Next'),
+                              ),
+                              const PopupMenuItem(
+                                value: 'add_queue',
+                                child: Text('Add to Queue'),
+                              ),
+                              const PopupMenuItem(
+                                value: 'album',
+                                child: Text('Go to Album'),
+                              ),
+                              const PopupMenuItem(
+                                value: 'artist',
+                                child: Text('Go to Artist'),
+                              ),
+                              const PopupMenuItem(
+                                value: 'playlist',
+                                child: Text('Add to Playlist'),
+                              ),
+                              const PopupMenuItem(
+                                value: 'details',
+                                child: Text('Details'),
+                              ),
+                            ],
                           ),
                           title: Text(
                             song.title,
@@ -307,10 +421,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 },
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: MiniPlayer(),
-            )
+            Align(alignment: Alignment.bottomCenter, child: MiniPlayer()),
           ],
         ),
       ),

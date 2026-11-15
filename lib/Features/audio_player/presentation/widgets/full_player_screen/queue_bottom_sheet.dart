@@ -29,9 +29,7 @@ class QueueBottomSheet extends StatelessWidget {
                   state is! PlayerQueueStoppedState) {
                 return ListView(
                   controller: scrollController,
-                  children: const [
-                    Center(child: Text('No songs in queue')),
-                  ],
+                  children: const [Center(child: Text('No songs in queue'))],
                 );
               }
               // Get playlist from either state
@@ -98,12 +96,11 @@ class QueueBottomSheet extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final song = playlist[index];
                         final isPlaying =
-    state is PlayerStatusState &&
-    state.currentSong.id == song.id &&
-    state.isPlaying;
+                            state is PlayerStatusState &&
+                            state.currentSong.id == song.id &&
+                            state.isPlaying;
 
                         return Dismissible(
-
                           //...
                           key: ValueKey('${song.id}_$index'),
                           direction: DismissDirection.endToStart,
@@ -111,7 +108,7 @@ class QueueBottomSheet extends StatelessWidget {
                             alignment: Alignment.centerRight,
                             padding: const EdgeInsets.only(right: 24),
                             decoration: BoxDecoration(
-                              color:Theme.of(context).colorScheme.primary,
+                              color: Theme.of(context).colorScheme.primary,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: const Icon(
@@ -121,8 +118,8 @@ class QueueBottomSheet extends StatelessWidget {
                           ),
                           onDismissed: (_) {
                             context.read<PlayerBloc>().add(
-                                  RemoveFromQueueEvent(index),
-                                );
+                              RemoveFromQueueEvent(index),
+                            );
                           },
                           child: Material(
                             key: ValueKey(song.id),
@@ -137,7 +134,7 @@ class QueueBottomSheet extends StatelessWidget {
                               contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 12,
                               ),
-                          
+
                               leading: Stack(
                                 alignment: Alignment.center,
                                 children: [
@@ -194,13 +191,11 @@ class QueueBottomSheet extends StatelessWidget {
                               ),
                               onTap: () {
                                 final playerBloc = context.read<PlayerBloc>();
-                          
+
                                 if (song.id == currentSong?.id) {
                                   playerBloc.add(TogglePlayPauseEvent());
                                 } else {
-                                  playerBloc.add(
-                                    PlaySongEvent(song, playlist),
-                                  );
+                                  playerBloc.add(PlaySongEvent(song, playlist));
                                 }
                               },
                             ),

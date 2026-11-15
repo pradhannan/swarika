@@ -12,26 +12,31 @@ class PlayerTopBar extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        IconButton(onPressed: (){
-          Navigator.pop(context);
-        }, icon: Icon(Icons.keyboard_arrow_down)),
+        IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.keyboard_arrow_down),
+        ),
 
-        IconButton(onPressed: onSleepTimerTap, icon: BlocBuilder<PlayerBloc, PlayerState>(
-  builder: (context, state) {
-    final isSleepTimerActive =
-        state is PlayerStatusState && state.isSleepTimerActive;
+        IconButton(
+          onPressed: onSleepTimerTap,
+          icon: BlocBuilder<PlayerBloc, PlayerState>(
+            builder: (context, state) {
+              final isSleepTimerActive =
+                  state is PlayerStatusState && state.isSleepTimerActive;
 
-    return Icon(
-      isSleepTimerActive
-          ? Icons.nights_stay_rounded
-          : Icons.punch_clock,
-      color: isSleepTimerActive
-          ? Theme.of(context).colorScheme.primary
-          : Theme.of(context).colorScheme.onSurface,
-    );
-  },
-))
-        
+              return Icon(
+                isSleepTimerActive
+                    ? Icons.nights_stay_rounded
+                    : Icons.punch_clock,
+                color: isSleepTimerActive
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onSurface,
+              );
+            },
+          ),
+        ),
       ],
     );
   }

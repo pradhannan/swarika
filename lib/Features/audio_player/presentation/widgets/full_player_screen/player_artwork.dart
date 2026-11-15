@@ -5,12 +5,7 @@ class PlayerArtwork extends StatelessWidget {
   final int songId;
   final String? imageUrl;
 
-  const PlayerArtwork({
-    super.key,
-   
-    this.imageUrl,
-    required this.songId,
-  });
+  const PlayerArtwork({super.key, this.imageUrl, required this.songId});
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +20,8 @@ class PlayerArtwork extends StatelessWidget {
           child: QueryArtworkWidget(
             id: songId,
             type: ArtworkType.AUDIO,
-           quality: 100,
-               
+            quality: 100,
+
             size: 600,
             artworkWidth: 325,
             artworkHeight: 325,

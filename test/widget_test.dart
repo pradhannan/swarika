@@ -17,11 +17,11 @@ import 'package:media_player_app/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     final audioRepository = AudioRepository();
-final audioPlayerRepository = AudioPlayerRepository();
-final database = AppDatabase(); // Or  test database instance
-final playbackSessionRepository = PlaybackSessionRepository(database);  
- // Build our app and trigger a frame
- final appSettingsRepository = AppSettingsRepository(database);
+    final audioPlayerRepository = AudioPlayerRepository();
+    final database = AppDatabase(); // Or  test database instance
+    final playbackSessionRepository = PlaybackSessionRepository(database);
+    // Build our app and trigger a frame
+    final appSettingsRepository = AppSettingsRepository(database);
     await tester.pumpWidget(
       MyApp(
         audioRepository: audioRepository,

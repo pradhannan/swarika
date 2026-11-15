@@ -30,9 +30,7 @@ class PlaylistPage extends StatelessWidget {
           BlocBuilder<AudioBloc, AudioState>(
             builder: (context, audioState) {
               if (audioState is! AudioLoaded) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return const Center(child: CircularProgressIndicator());
               }
 
               return BlocBuilder<PlaylistBloc, PlaylistState>(
@@ -42,8 +40,8 @@ class PlaylistPage extends StatelessWidget {
                   if (isFavorites) {
                     playlistSongs = audioState.songs
                         .where(
-                          (song) => playlistState.favoriteSongIds
-                              .contains(song.id),
+                          (song) =>
+                              playlistState.favoriteSongIds.contains(song.id),
                         )
                         .toList();
                   } else {
@@ -66,48 +64,32 @@ class PlaylistPage extends StatelessWidget {
                           icon: const Icon(Icons.arrow_back),
                           onPressed: () => Navigator.pop(context),
                         ),
-                        flexibleSpace: CollapsingTitle(
-                          title: playlistName,
-                        ),
+                        flexibleSpace: CollapsingTitle(title: playlistName),
                       ),
 
                       SliverToBoxAdapter(
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                            16,
-                            0,
-                            16,
-                            12,
-                          ),
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
                           child: Text(
                             '${playlistSongs.length} Songs',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.w600),
                           ),
                         ),
                       ),
 
                       SliverPadding(
-                        padding: const EdgeInsets.fromLTRB(
-                          16,
-                          0,
-                          16,
-                          16,
-                        ),
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                         sliver: SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              final song = playlistSongs[index];
-                              final songs = playlistSongs;
+                          delegate: SliverChildBuilderDelegate((
+                            context,
+                            index,
+                          ) {
+                            final song = playlistSongs[index];
+                            final songs = playlistSongs;
 
-                              return SongTile(song: song, playlist: songs,);
-                            },
-                            childCount: playlistSongs.length,
-                          ),
+                            return SongTile(song: song, playlist: songs);
+                          }, childCount: playlistSongs.length),
                         ),
                       ),
                       const SliverToBoxAdapter(child: SizedBox(height: 90)),
@@ -118,10 +100,7 @@ class PlaylistPage extends StatelessWidget {
             },
           ),
 
-          const Align(
-            alignment: Alignment.bottomCenter,
-            child: MiniPlayer(),
-          ),
+          const Align(alignment: Alignment.bottomCenter, child: MiniPlayer()),
         ],
       ),
     );

@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+
 import 'color_palettes.dart';
 
 class AppTheme {
@@ -24,7 +24,6 @@ class AppTheme {
     );
   }
 
- 
   static ThemeData darkTheme(ColorPaletteData palette) {
     return ThemeData(
       useMaterial3: true,

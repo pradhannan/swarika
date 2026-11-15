@@ -6,9 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:on_audio_query/on_audio_query.dart' as audio_query;
 import 'package:file_picker/file_picker.dart';
 
-
 class AudioRepository {
-
   final audio_query.OnAudioQuery _audioQuery = audio_query.OnAudioQuery();
   // 1. Permission check method
   Future<bool> requestPermission() async {
@@ -25,8 +23,7 @@ class AudioRepository {
       return await pickSongsFromWeb();
     }
 
-    
-    final hasPermission = await requestPermission(); 
+    final hasPermission = await requestPermission();
     if (!hasPermission) {
       throw Exception('Storage permission denied');
     }
@@ -38,58 +35,56 @@ class AudioRepository {
       ignoreCase: true,
     );
     final rawArtists = await _audioQuery.queryArtists();
-//    final rawGenres = await _audioQuery.queryGenres();
-//     debugPrint('Available genres: $rawGenres');
-//     for (final genre in rawGenres) {
-//   debugPrint(
-//     'Genre: ${genre.genre}, ID: ${genre.id}, Songs: ${genre.numOfSongs}',
-//   );
-// }
+    //    final rawGenres = await _audioQuery.queryGenres();
+    //     debugPrint('Available genres: $rawGenres');
+    //     for (final genre in rawGenres) {
+    //   debugPrint(
+    //     'Genre: ${genre.genre}, ID: ${genre.id}, Songs: ${genre.numOfSongs}',
+    //   );
+    // }
     final artistIds = {
-  for (final artist in rawArtists)
-    artist.artist: artist.id.toString(),
-};
+      for (final artist in rawArtists) artist.artist: artist.id.toString(),
+    };
 
-    return  rawSongs.map((song) {
-  //    debugPrint(
-  // 'Song: ${song.title}, Genre: ${song.genre}');
-  return SongModel(
-   artistId: artistIds[song.artist],
-    id: song.id.toString(),
-    title: song.title,
-    artist: song.artist ?? 'Unknown Artist',
-    album: song.album ?? 'Unknown Album',
-    uri: song.data, // 'data' holds the file path on device
-    duration: song.duration ?? 0,
-    genre: song.genre,
-   
-  );
-}).toList();
+    return rawSongs.map((song) {
+      //    debugPrint(
+      // 'Song: ${song.title}, Genre: ${song.genre}');
+      return SongModel(
+        artistId: artistIds[song.artist],
+        id: song.id.toString(),
+        title: song.title,
+        artist: song.artist ?? 'Unknown Artist',
+        album: song.album ?? 'Unknown Album',
+        uri: song.data, // 'data' holds the file path on device
+        duration: song.duration ?? 0,
+        genre: song.genre,
+      );
+    }).toList();
   }
 
   // 3. Web picker ..
   Future<List<SongModel>> pickSongsFromWeb() async {
-  final result = await FilePicker.pickFiles(
-    type: FileType.audio,
-    
-  );
+    final result = await FilePicker.pickFiles(type: FileType.audio);
 
-  // If the user cancelled the picker dialog
-  // ignore: unnecessary_null_comparison
-  if (result == null || result.isEmpty) {
-    return [];
+    // If the user cancelled the picker dialog
+    // ignore: unnecessary_null_comparison
+    if (result == null || result.isEmpty) {
+      return [];
+    }
+
+    return result.map((file) {
+      return SongModel(
+        artistId: null,
+        id: file.name, // Uses file name as a unique identifier on Web
+        title: file.name.replaceAll(
+          RegExp(r'\.[^.]+$'),
+          '',
+        ), // Removes extension like .mp3
+        artist: 'Web Track',
+        album: 'Uploaded',
+        uri: file.path ?? file.toString(), // Holds Web blob URL or path
+        duration: 0, // Duration resolved later when audio player loads stream
+      );
+    }).toList();
   }
-
-  return  result.map((file) {
-  return SongModel(
-    artistId: null,
-    id: file.name, // Uses file name as a unique identifier on Web
-    title: file.name.replaceAll(RegExp(r'\.[^.]+$'), ''), // Removes extension like .mp3
-    artist: 'Web Track',
-    album: 'Uploaded',
-    uri: file.path ?? file.toString(), // Holds Web blob URL or path
-    duration: 0, // Duration resolved later when audio player loads stream
-  );
-}).toList();
-}
 }

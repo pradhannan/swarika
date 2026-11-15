@@ -4,7 +4,11 @@ class FolderSection extends StatelessWidget {
   final String selectedSection;
   final ValueChanged<String> onSectionSelected;
 
-  const FolderSection({super.key, required this.selectedSection, required this.onSectionSelected, });
+  const FolderSection({
+    super.key,
+    required this.selectedSection,
+    required this.onSectionSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +18,7 @@ class FolderSection extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 8),
         children: [
-        _FolderTile(
+          _FolderTile(
             title: 'Songs',
             isSelected: selectedSection == 'Songs',
             onTap: () => onSectionSelected('Songs'),
@@ -46,13 +50,15 @@ class FolderSection extends StatelessWidget {
 }
 
 class _FolderTile extends StatelessWidget {
-   final String title; 
-  final bool isSelected; 
-  final VoidCallback onTap; 
+  final String title;
+  final bool isSelected;
+  final VoidCallback onTap;
 
-
-
-  const _FolderTile({required this.title, required this.isSelected, required this.onTap,});
+  const _FolderTile({
+    required this.title,
+    required this.isSelected,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -62,38 +68,33 @@ class _FolderTile extends StatelessWidget {
       margin: const EdgeInsets.only(right: 12),
       padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
       decoration: BoxDecoration(
-     // Give the selected folder a distinct background.
-color: isSelected
-    ? colors.primary
-    : colors.surfaceContainerHighest,
+        // Give the selected folder a distinct background.
+        color: isSelected
+            ? colors.primary
+            : Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(18),
-      
-        border: Border.all(
-          color: colors.outline,
-        ),
-       
+
+        border: Border.all(color: colors.outline),
       ),
-      
+
       child: Material(
         // Give the selected folder a distinct background.
-color: isSelected
-    ? colors.primary
-    : colors.surfaceContainerHighest,
-    borderRadius: BorderRadius.circular(18),
+        color: isSelected
+            ? colors.primary
+            : Theme.of(context).scaffoldBackgroundColor,
+        borderRadius: BorderRadius.circular(18),
         child: InkWell(
           onTap: onTap,
-           borderRadius: BorderRadius.circular(18),
-       
+          borderRadius: BorderRadius.circular(18),
+
           child: Text(
             title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
-  color: isSelected
-      ? colors.onPrimary
-      : colors.onSurface,
-  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-),
+              color: isSelected ? colors.onPrimary : colors.onSurface,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
           ),
         ),
       ),

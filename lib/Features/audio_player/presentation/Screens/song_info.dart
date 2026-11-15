@@ -42,7 +42,7 @@ class SongInfo extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(4),
-                     
+
                       child: SizedBox(
                         height: 220,
                         width: double.infinity,
@@ -91,7 +91,7 @@ class SongInfo extends StatelessWidget {
                     _buildInfoRow(context, 'Title:', song.title),
                     _buildInfoRow(context, 'Artist:', song.artist),
                     _buildInfoRow(context, 'Album:', song.album),
-                   //  _buildInfoRow(context, 'Genre:', song.genre),
+                    //  _buildInfoRow(context, 'Genre:', song.genre),
 
                     _buildInfoRow(
                       context,

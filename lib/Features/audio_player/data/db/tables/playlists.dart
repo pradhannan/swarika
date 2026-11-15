@@ -5,6 +5,5 @@ class Playlists extends Table {
 
   TextColumn get name => text()();
 
-  DateTimeColumn get createdAt =>
-      dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }

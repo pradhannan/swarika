@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 import 'package:media_player_app/Features/audio_player/data/db/app_database.dart';
 
@@ -36,10 +35,10 @@ class PlaylistState extends Equatable {
 
   @override
   List<Object?> get props => [
-        favoriteSongIds,
-        playlists,
-        playlistSongIds,
-        isLoading,
-        errorMessage,
-      ];
+    favoriteSongIds,
+    playlists,
+    playlistSongIds,
+    isLoading,
+    errorMessage,
+  ];
 }

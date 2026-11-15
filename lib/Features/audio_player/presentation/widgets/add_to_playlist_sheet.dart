@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:on_audio_query/on_audio_query.dart' hide SongModel;
@@ -31,9 +30,7 @@ class AddToPlaylistSheet extends StatelessWidget {
         return Container(
           decoration: BoxDecoration(
             color: Theme.of(context).scaffoldBackgroundColor,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(24),
-            ),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: Column(
             children: [
@@ -77,9 +74,7 @@ class AddToPlaylistSheet extends StatelessWidget {
                 child: BlocBuilder<PlaylistBloc, PlaylistState>(
                   builder: (context, state) {
                     final favoriteSongs = allSongs
-                        .where(
-                          (s) => state.favoriteSongIds.contains(s.id),
-                        )
+                        .where((s) => state.favoriteSongIds.contains(s.id))
                         .toList();
 
                     return ListView(
@@ -96,8 +91,9 @@ class AddToPlaylistSheet extends StatelessWidget {
                               ? null
                               : favoriteSongs.first,
                           isFavorites: true,
-                          isAlreadyAdded:
-                              state.favoriteSongIds.contains(song.id),
+                          isAlreadyAdded: state.favoriteSongIds.contains(
+                            song.id,
+                          ),
                           onTap: () {
                             if (state.favoriteSongIds.contains(song.id)) {
                               _showMessage(
@@ -108,8 +104,8 @@ class AddToPlaylistSheet extends StatelessWidget {
                             }
 
                             context.read<PlaylistBloc>().add(
-                                  AddFavoriteEvent(song.id),
-                                );
+                              AddFavoriteEvent(song.id),
+                            );
 
                             Navigator.pop(context);
                           },
@@ -117,8 +113,7 @@ class AddToPlaylistSheet extends StatelessWidget {
 
                         // Custom playlists
                         ...state.playlists.map((playlist) {
-                          final ids =
-                              state.playlistSongIds[playlist.id] ?? [];
+                          final ids = state.playlistSongIds[playlist.id] ?? [];
 
                           final playlistSongs = allSongs
                               .where((s) => ids.contains(s.id))
@@ -145,11 +140,11 @@ class AddToPlaylistSheet extends StatelessWidget {
                               }
 
                               context.read<PlaylistBloc>().add(
-                                    AddSongToPlaylistEvent(
-                                      playlistId: playlist.id,
-                                      songId: song.id,
-                                    ),
-                                  );
+                                AddSongToPlaylistEvent(
+                                  playlistId: playlist.id,
+                                  songId: song.id,
+                                ),
+                              );
 
                               Navigator.pop(context);
                             },
@@ -171,9 +166,7 @@ class AddToPlaylistSheet extends StatelessWidget {
                           ),
                           title: const Text(
                             'Create New Playlist',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                            ),
+                            style: TextStyle(fontWeight: FontWeight.w500),
                           ),
                           onTap: () => _showCreatePlaylistDialog(context),
                         ),
@@ -202,13 +195,8 @@ class AddToPlaylistSheet extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 4,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         leading: SizedBox(
           width: 48,
           height: 48,
@@ -224,25 +212,15 @@ class AddToPlaylistSheet extends StatelessWidget {
                     artworkWidth: 48,
                     artworkHeight: 48,
                     artworkFit: BoxFit.cover,
-                    nullArtworkWidget: _placeholder(
-                      colors,
-                      isFavorites,
-                    ),
+                    nullArtworkWidget: _placeholder(colors, isFavorites),
                   )
                 : _placeholder(colors, isFavorites),
           ),
         ),
-        title: Text(
-          name,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
+        title: Text(name, maxLines: 1, overflow: TextOverflow.ellipsis),
         subtitle: Text('$songCount songs'),
         trailing: isAlreadyAdded
-            ? Icon(
-                Icons.check_circle_rounded,
-                color: colors.primary,
-              )
+            ? Icon(Icons.check_circle_rounded, color: colors.primary)
             : Icon(
                 Icons.add_circle_outline_rounded,
                 color: colors.onSurfaceVariant,
@@ -256,18 +234,11 @@ class AddToPlaylistSheet extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        gradient: LinearGradient(
-          colors: [
-            colors.primary,
-            colors.secondary,
-          ],
-        ),
+        gradient: LinearGradient(colors: [colors.primary, colors.secondary]),
       ),
       alignment: Alignment.center,
       child: Icon(
-        isFavorites
-            ? Icons.favorite_rounded
-            : Icons.music_note_rounded,
+        isFavorites ? Icons.favorite_rounded : Icons.music_note_rounded,
         size: 28,
         color: colors.onPrimary,
       ),
@@ -275,43 +246,35 @@ class AddToPlaylistSheet extends StatelessWidget {
   }
 
   void _showCreatePlaylistDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    useRootNavigator: true,
-    builder: (dialogContext) {
-      return _CreatePlaylistDialog(
-        onCreate: (name) {
-          context.read<PlaylistBloc>().add(
-                CreatePlaylistEvent(name),
-              );
-        },
-      );
-    },
-  );
-}
-
+    showDialog(
+      context: context,
+      useRootNavigator: true,
+      builder: (dialogContext) {
+        return _CreatePlaylistDialog(
+          onCreate: (name) {
+            context.read<PlaylistBloc>().add(CreatePlaylistEvent(name));
+          },
+        );
+      },
+    );
+  }
 
   void _showMessage(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 }
 
 class _CreatePlaylistDialog extends StatefulWidget {
   final ValueChanged<String> onCreate;
 
-  const _CreatePlaylistDialog({
-    required this.onCreate,
-  });
+  const _CreatePlaylistDialog({required this.onCreate});
 
   @override
-  State<_CreatePlaylistDialog> createState() =>
-      _CreatePlaylistDialogState();
+  State<_CreatePlaylistDialog> createState() => _CreatePlaylistDialogState();
 }
 
-class _CreatePlaylistDialogState
-    extends State<_CreatePlaylistDialog> {
+class _CreatePlaylistDialogState extends State<_CreatePlaylistDialog> {
   late final TextEditingController _controller;
 
   @override
@@ -354,10 +317,7 @@ class _CreatePlaylistDialogState
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('Cancel'),
         ),
-        FilledButton(
-          onPressed: _create,
-          child: const Text('Create'),
-        ),
+        FilledButton(onPressed: _create, child: const Text('Create')),
       ],
     );
   }

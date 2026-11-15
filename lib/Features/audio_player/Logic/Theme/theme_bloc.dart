@@ -10,14 +10,18 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
 
   ThemeBloc(this._appSettingsRepository) : super(const ThemeState()) {
     on<LoadThemeEvent>((event, emit) async {
-      final savedModeStr = await _appSettingsRepository.getSetting('theme_mode');
-      final savedPalette = await _appSettingsRepository.getSetting('selected_palette');
+      final savedModeStr = await _appSettingsRepository.getSetting(
+        'theme_mode',
+      );
+      final savedPalette = await _appSettingsRepository.getSetting(
+        'selected_palette',
+      );
 
       final parsedThemeMode = savedModeStr == 'light'
           ? ThemeMode.light
           : savedModeStr == 'dark'
-              ? ThemeMode.dark
-              : state.themeMode;
+          ? ThemeMode.dark
+          : state.themeMode;
 
       emit(
         ThemeState(
@@ -34,7 +38,10 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
           selectedPalette: state.selectedPalette,
         ),
       );
-      await _appSettingsRepository.setSetting('theme_mode', event.themeMode.name);
+      await _appSettingsRepository.setSetting(
+        'theme_mode',
+        event.themeMode.name,
+      );
     });
 
     on<ColorPaletteChanged>((event, emit) async {
@@ -44,7 +51,10 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
           selectedPalette: event.paletteName,
         ),
       );
-      await _appSettingsRepository.setSetting('selected_palette', event.paletteName);
+      await _appSettingsRepository.setSetting(
+        'selected_palette',
+        event.paletteName,
+      );
     });
 
     add(LoadThemeEvent());

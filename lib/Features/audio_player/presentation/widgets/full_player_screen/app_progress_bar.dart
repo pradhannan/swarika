@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'progress_bar_style.dart';
 
 class AppProgressBar extends StatelessWidget {
@@ -19,9 +20,10 @@ class AppProgressBar extends StatelessWidget {
   Widget build(BuildContext context) {
     // 1. Convert Durations to milliseconds for the slider
     final double maxDuration = duration.inMilliseconds.toDouble();
-    final double currentPosition = position.inMilliseconds
-        .toDouble()
-        .clamp(0.0, maxDuration > 0 ? maxDuration : 1.0);
+    final double currentPosition = position.inMilliseconds.toDouble().clamp(
+      0.0,
+      maxDuration > 0 ? maxDuration : 1.0,
+    );
 
     // 2. Select display mode based on style
     switch (style) {
@@ -42,7 +44,10 @@ class AppProgressBar extends StatelessWidget {
 
   // --- Base Linear Slider ---
   Widget _buildLinearBar(
-      BuildContext context, double positionMs, double durationMs) {
+    BuildContext context,
+    double positionMs,
+    double durationMs,
+  ) {
     final colors = Theme.of(context).colorScheme;
 
     return SliderTheme(

@@ -84,8 +84,8 @@ class ArtistsPage extends StatelessWidget {
                                 width: double.infinity,
                                 child: QueryArtworkWidget(
                                   id: int.tryParse(firstSong.id) ?? -1,
-                                   quality: 100,
-  size: 1000,
+                                  quality: 100,
+                                  size: 1000,
                                   type: ArtworkType.AUDIO,
                                   artworkFit: BoxFit.cover,
                                   nullArtworkWidget: Container(
@@ -139,7 +139,7 @@ class ArtistsPage extends StatelessWidget {
                   delegate: SliverChildBuilderDelegate((context, index) {
                     final song = songs[index];
 
-                    return SongTile(song: song, playlist: songs,);
+                    return SongTile(song: song, playlist: songs);
                   }, childCount: songs.length),
                 ),
               ),

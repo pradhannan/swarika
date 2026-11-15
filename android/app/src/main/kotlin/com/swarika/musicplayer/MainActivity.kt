@@ -1,4 +1,4 @@
-package com.example.media_player_app
+package com.swarika.musicplayer
 
 import com.ryanheise.audioservice.AudioServiceActivity
 

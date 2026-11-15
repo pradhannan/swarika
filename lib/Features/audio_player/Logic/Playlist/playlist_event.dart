@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 
 abstract class PlaylistEvent extends Equatable {
@@ -51,10 +50,7 @@ class RenamePlaylistEvent extends PlaylistEvent {
   final int playlistId;
   final String newName;
 
-  const RenamePlaylistEvent({
-    required this.playlistId,
-    required this.newName,
-  });
+  const RenamePlaylistEvent({required this.playlistId, required this.newName});
 
   @override
   List<Object?> get props => [playlistId, newName];

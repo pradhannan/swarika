@@ -7,10 +7,7 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
   LibraryBloc() : super(const LibraryState()) {
     on<SelectLibrarySection>((event, emit) {
       emit(
-        state.copyWith(
-          selectedSection: event.section,
-          clearSelectedItem: true,
-        ),
+        state.copyWith(selectedSection: event.section, clearSelectedItem: true),
       );
     });
 

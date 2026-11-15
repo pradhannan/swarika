@@ -10,17 +10,15 @@ class AnimatedEqualizer extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: List.generate(3, (index) {
         return Container(
-          width: 3,
-          height: 10,
-          margin: const EdgeInsets.symmetric(horizontal: 2),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(3),
-          ),
-        )
-            .animate(
-              onPlay: (controller) => controller.repeat(),
+              width: 3,
+              height: 10,
+              margin: const EdgeInsets.symmetric(horizontal: 2),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(3),
+              ),
             )
+            .animate(onPlay: (controller) => controller.repeat())
             .scaleY(
               begin: 0.4,
               end: 1.8,

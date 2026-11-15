@@ -1,11 +1,8 @@
 import 'package:equatable/equatable.dart';
+
 import '../../domain/song_model.dart';
 
-enum RepeatMode {
-  off,
-  all,
-  one,
-}
+enum RepeatMode { off, all, one }
 
 abstract class PlayerState extends Equatable {
   const PlayerState();
@@ -25,41 +22,41 @@ class PlayerStatusState extends PlayerState {
   final RepeatMode repeatMode;
   final bool isShuffle;
   final bool isSleepTimerActive;
-final Duration? sleepTimeRemaining;
-final bool sleepAfterCurrentSong;
+  final Duration? sleepTimeRemaining;
+  final bool sleepAfterCurrentSong;
 
   const PlayerStatusState({
     required this.currentSong,
     required this.isPlaying,
     required this.position,
-    required this.duration, required this.playlist,  this.repeatMode = RepeatMode.off,
+    required this.duration,
+    required this.playlist,
+    this.repeatMode = RepeatMode.off,
     this.isShuffle = false,
     this.isSleepTimerActive = false,
-this.sleepTimeRemaining,
-this.sleepAfterCurrentSong = false,
-
+    this.sleepTimeRemaining,
+    this.sleepAfterCurrentSong = false,
   });
 
   @override
   List<Object?> get props => [
-        currentSong,
-        isPlaying,
-        position,
-        duration,
-        playlist,
-        isShuffle,
-        repeatMode,
-        isSleepTimerActive,
-sleepTimeRemaining,
-sleepAfterCurrentSong,
-      ];
+    currentSong,
+    isPlaying,
+    position,
+    duration,
+    playlist,
+    isShuffle,
+    repeatMode,
+    isSleepTimerActive,
+    sleepTimeRemaining,
+    sleepAfterCurrentSong,
+  ];
 }
+
 class PlayerQueueStoppedState extends PlayerState {
   final List<SongModel> playlist;
 
-  const PlayerQueueStoppedState({
-    required this.playlist,
-  });
+  const PlayerQueueStoppedState({required this.playlist});
 
   @override
   List<Object> get props => [playlist];

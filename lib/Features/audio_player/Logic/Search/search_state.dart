@@ -16,13 +16,13 @@ class SearchResultsState extends SearchState {
   final String query;
   final List<SongModel> results;
   final List<String> albums;
-final List<String> artists;
+  final List<String> artists;
 
   const SearchResultsState({
     required this.query,
     required this.results,
     this.albums = const [],
-this.artists = const [],
+    this.artists = const [],
   });
 
   @override

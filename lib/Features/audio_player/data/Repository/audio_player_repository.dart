@@ -170,35 +170,33 @@ class AudioPlayerRepository {
     await _player.setLoopMode(mode);
   }
 
+  //loading the paused playlist for persistence
 
-//loading the paused playlist for persistence
+  Future<void> loadPlaylistPaused({
+    required List<SongModel> songs,
+    required int initialIndex,
+    required Duration initialPosition,
+  }) async {
+    if (songs.isEmpty) {
+      await _player.stop();
+      return;
+    }
 
-Future<void> loadPlaylistPaused({
-  required List<SongModel> songs,
-  required int initialIndex,
-  required Duration initialPosition,
-}) async {
-  if (songs.isEmpty) {
-    await _player.stop();
-    return;
+    final safeIndex = initialIndex.clamp(0, songs.length - 1);
+
+    final sources = await Future.wait(
+      songs.map((song) => _createAudioSource(song)),
+    );
+
+    // Ensure restoration never starts playback
+    await _player.pause();
+
+    await _player.setAudioSources(
+      sources,
+      initialIndex: safeIndex,
+      initialPosition: initialPosition,
+    );
   }
-
-  final safeIndex = initialIndex.clamp(0, songs.length - 1);
-
-  final sources = await Future.wait(
-    songs.map((song) => _createAudioSource(song)),
-  );
-
-  // Ensure restoration never starts playback
-  await _player.pause();
-
-  await _player.setAudioSources(
-    sources,
-    initialIndex: safeIndex,
-    initialPosition: initialPosition,
-  );
-}
-
 
   Future<void> dispose() async {
     await _player.dispose();

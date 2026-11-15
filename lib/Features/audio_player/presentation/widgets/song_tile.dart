@@ -19,7 +19,6 @@ class SongTile extends StatelessWidget {
   final SongModel song;
   final List<SongModel>? playlist; // the contextual list used for playback.
 
-
   const SongTile({super.key, required this.song, this.playlist});
 
   @override
@@ -34,7 +33,7 @@ class SongTile extends StatelessWidget {
           id: int.parse(song.id),
           type: ArtworkType.AUDIO,
           quality: 100,
-      size: 1000,
+          size: 1000,
           artworkWidth: 48,
           artworkHeight: 48,
           artworkFit: BoxFit.cover,
@@ -47,11 +46,7 @@ class SongTile extends StatelessWidget {
                 end: Alignment.bottomRight,
               ),
             ),
-            child: Icon(
-              Icons.album_rounded,
-              color: colors.onPrimary,
-              size: 28,
-            ),
+            child: Icon(Icons.album_rounded, color: colors.onPrimary, size: 28),
           ),
         ),
       ),
@@ -132,110 +127,104 @@ class SongTile extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             trailing: PopupMenuButton<String>(
-  icon: const Icon(Icons.more_vert),
-  onSelected: (value) {
-    switch (value) {
-      case 'play_next':
-        context.read<PlayerBloc>().add(PlayNextEvent(song));
-        break;
+              icon: const Icon(Icons.more_vert),
+              onSelected: (value) {
+                switch (value) {
+                  case 'play_next':
+                    context.read<PlayerBloc>().add(PlayNextEvent(song));
+                    break;
 
-      case 'add_queue':
-        context.read<PlayerBloc>().add(AddToQueueEvent(song));
-        break;
+                  case 'add_queue':
+                    context.read<PlayerBloc>().add(AddToQueueEvent(song));
+                    break;
 
-      case 'album':
-  final songs = context.read<AudioBloc>().state as AudioLoaded;
+                  case 'album':
+                    final songs =
+                        context.read<AudioBloc>().state as AudioLoaded;
 
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => AlbumPage(
-        album: song.album,
-        songs: songs.songs
-            .where((s) => s.album == song.album)
-            .toList(),
-      ),
-    ),
-  );
-  break;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => AlbumPage(
+                          album: song.album,
+                          songs: songs.songs
+                              .where((s) => s.album == song.album)
+                              .toList(),
+                        ),
+                      ),
+                    );
+                    break;
 
-      case 'artist':
-  final songs = context.read<AudioBloc>().state as AudioLoaded;
+                  case 'artist':
+                    final songs =
+                        context.read<AudioBloc>().state as AudioLoaded;
 
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => ArtistsPage(
-        artist: song.artist,
-        songs: songs.songs
-            .where((s) => s.artist == song.artist)
-            .toList(),
-      ),
-    ),
-  );
-  break;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ArtistsPage(
+                          artist: song.artist,
+                          songs: songs.songs
+                              .where((s) => s.artist == song.artist)
+                              .toList(),
+                        ),
+                      ),
+                    );
+                    break;
 
-      case 'playlist':
-  final audioState = context.read<AudioBloc>().state;
+                  case 'playlist':
+                    final audioState = context.read<AudioBloc>().state;
 
-  if (audioState is AudioLoaded) {
-    context.read<PlaylistBloc>().add(
-      const LoadPlaylistsEvent(),
-    );
+                    if (audioState is AudioLoaded) {
+                      context.read<PlaylistBloc>().add(
+                        const LoadPlaylistsEvent(),
+                      );
 
-    context.read<PlaylistBloc>().add(
-      const LoadFavoritesEvent(),
-    );
+                      context.read<PlaylistBloc>().add(
+                        const LoadFavoritesEvent(),
+                      );
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => AddToPlaylistSheet(
-        song: song,
-        allSongs: audioState.songs,
-      ),
-    );
-  }
-  break;
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (context) => AddToPlaylistSheet(
+                          song: song,
+                          allSongs: audioState.songs,
+                        ),
+                      );
+                    }
+                    break;
 
-     case 'details':
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => SongInfo(song: song),
-    ),
-  );
-  break;
-    }
-  },
-  itemBuilder: (context) => [
-    const PopupMenuItem(
-      value: 'play_next',
-      child: Text('Play Next'),
-    ),
-    const PopupMenuItem(
-      value: 'add_queue',
-      child: Text('Add to Queue'),
-    ),
-    const PopupMenuItem(
-      value: 'album',
-      child: Text('Go to Album'),
-    ),
-    const PopupMenuItem(
-      value: 'artist',
-      child: Text('Go to Artist'),
-    ),
-    const PopupMenuItem(
-      value: 'playlist',
-      child: Text('Add to Playlist'),
-    ),
-    const PopupMenuItem(
-      value: 'details',
-      child: Text('Details'),
-    ),
-  ],
-),
+                  case 'details':
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => SongInfo(song: song)),
+                    );
+                    break;
+                }
+              },
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  value: 'play_next',
+                  child: Text('Play Next'),
+                ),
+                const PopupMenuItem(
+                  value: 'add_queue',
+                  child: Text('Add to Queue'),
+                ),
+                const PopupMenuItem(value: 'album', child: Text('Go to Album')),
+                const PopupMenuItem(
+                  value: 'artist',
+                  child: Text('Go to Artist'),
+                ),
+                const PopupMenuItem(
+                  value: 'playlist',
+                  child: Text('Add to Playlist'),
+                ),
+                const PopupMenuItem(value: 'details', child: Text('Details')),
+              ],
+            ),
             onTap: () {
               final currentState = context.read<PlayerBloc>().state;
 
@@ -248,7 +237,7 @@ class SongTile extends StatelessWidget {
                 if (audioState is AudioLoaded) {
                   context.read<PlayerBloc>().add(
                     // Use the screen's playlist; fall back to all songs on the library screen.
-PlaySongEvent(song, playlist ?? audioState.songs),
+                    PlaySongEvent(song, playlist ?? audioState.songs),
                   );
                 }
               }
