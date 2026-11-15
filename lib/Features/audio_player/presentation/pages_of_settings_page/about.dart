@@ -126,7 +126,7 @@ class AboutScreen extends StatelessWidget {
 
                     onTap: () async {
                       final uri = Uri.parse(
-                        'https://github.com/pradhannan/offline_media_player',
+                        'https://github.com/pradhannan/swarika',
                       );
 
                       await launchUrl(
@@ -162,7 +162,7 @@ class AboutScreen extends StatelessWidget {
 
                     onTap: () async {
                       final uri = Uri.parse(
-                        'https://pradhannan.github.io/offline_media_player/privacy-policy.html',
+                        'https://pradhannan.github.io/swarika/docs/privacy_policy.html',
                       );
 
                       await launchUrl(
@@ -182,7 +182,7 @@ class AboutScreen extends StatelessWidget {
 
                     onTap: () async {
                       final uri = Uri.parse(
-                        'https://pradhannan.github.io/offline_media_player/terms-and-conditions.html',
+                        'https://pradhannan.github.io/swarika/docs/terms_and_conditions.html',
                       );
 
                       await launchUrl(
